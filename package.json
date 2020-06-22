@@ -1,0 +1,44 @@
+{
+  "name": "easy-mail",
+  "version": "1.0.0",
+  "description": "A small SPA application to make emails and send them via SendGrid",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dumihuvud/easy-mail.git"
+  },
+  "author": "Eugene Ganshin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dumihuvud/easy-mail/issues"
+  },
+  "homepage": "https://github.com/dumihuvud/easy-mail#readme",
+  "dependencies": {
+    "@sendgrid/helpers": "^7.2.0",
+    "@sendgrid/mail": "^7.2.0",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.2.0",
+    "cookie-session": "^1.4.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.9.18",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
+    "path-parser": "^6.1.0",
+    "sendgrid": "^5.2.3",
+    "stripe": "^8.63.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "snazzy": "^8.0.0",
+    "standard": "^14.3.1"
+  }
+}
