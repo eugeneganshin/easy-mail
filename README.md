@@ -1,4 +1,4 @@
-# A small SPA application to create emails and send them with SendGrid API.
+# A small SPA application to make emails and send them via SendGrid.
 
 ## Used technologies:
 
