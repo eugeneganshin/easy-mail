@@ -2,4 +2,4 @@
 
 ## Used technologies:
 
-###### React, Redux, GoogleAuth, SendGrid, Stripe, Express
+###### React, Redux, GoogleAuth, SendGrid, Stripe, Express, MongoDB
