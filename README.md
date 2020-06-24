@@ -2,4 +2,4 @@
 
 ## Used technologies:
 
-###### React, Redux, GoogleAuth, SendGrid, Stripe, Express, MongoDB
+###### React, Redux, GoogleAuth, SendGrid, Stripe, Express, MongoDB, Telegram API, Socket.io
