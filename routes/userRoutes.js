@@ -2,7 +2,7 @@ const express = require('express')
 const keys = require('../config/keys')
 const stripe = require('stripe')(keys.STRIPE_SECRET_KEY)
 
-const authC = require('../controllers/authControll')
+const authC = require('../controllers/authController')
 
 const router = express.Router()
 

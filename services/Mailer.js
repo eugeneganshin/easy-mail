@@ -10,7 +10,7 @@ class Mailer {
     this.content = content
     this.isMultiple = true
 
-    sgMail.setApiKey(keys.SEND_GRID_KEY)
+    sgMail.setApiKey(keys.SEND_GRID_ADDITIONAL_KEY)
 
     if (this.recipients.length === 1) {
       this.recipients = this.recipients[0]
@@ -19,7 +19,7 @@ class Mailer {
 
     this.msg = {
       to: this.recipients,
-      from: 'e.s.ganshin.study@gmail.com',
+      from: 'eganshin@gmail.com',
       subject: subject,
       html: content,
       trackingSettings: {
@@ -41,6 +41,7 @@ class Mailer {
       }
 
       const res = await sgMail.send(this.msg)
+      console.log(res)
       return res
     } catch (error) {
       console.log(error)
