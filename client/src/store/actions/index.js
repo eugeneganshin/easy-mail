@@ -1,2 +1,2 @@
 export { fetchUser, logoutUser, handleToken } from "./auth";
-export { submitSurvey, fetchSurveys } from "./survey";
+export { submitSurvey, fetchSurveys, test } from "./survey";

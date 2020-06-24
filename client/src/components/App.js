@@ -9,9 +9,15 @@ import Header from "./Header";
 import Landing from "./Landing";
 import Dashboard from "./Dashboard";
 import SurveyNew from "./surveys/SurveyNew";
+import { actionTypes } from "redux-form";
 
 
 class App extends Component {
+
+  // TODO: socket.on('clientResponede', (res) => {
+  //   this.props.onTest(res)
+  // })
+
   componentDidMount() {
     this.props.onFetchUser();
     const socket = io('http://localhost:5000');
@@ -35,6 +41,7 @@ class App extends Component {
 const mapdispatchtoprops = (dispatch) => {
   return {
     onFetchUser: () => dispatch(actionCreators.fetchUser()),
+    onTest: () => dispatch(actionCreators.test())
   };
 };
 

@@ -26,3 +26,17 @@ export const fetchSurveys = () => {
 };
 
 // TODO: socket io action to get feedback from users.
+
+export const initialData = (data) => ({
+  type: actionTypes.TEST,
+  payload: data
+})
+
+export const test = (socket) => {
+  return async dispatch => {
+    socket.on('news', data => {
+      console.log(data)
+      dispatch(initialData(data))
+    })
+  }
+}

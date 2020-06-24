@@ -6,7 +6,7 @@ const surveyTemplate = require("../services/emailTemplates/suveyTemplate");
 
 exports.getSurvey = async (req, res, next) => {
     const io = req.app.get('io')
-    io.emit('news', 'news')
+    io.emit('news', { data: 'data' })
     console.log(io)
 
     const surveys = await Survey.find({ _user: req.user.id })
