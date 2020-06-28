@@ -20,8 +20,8 @@ class App extends Component {
 
   componentDidMount() {
     this.props.onFetchUser();
-    const socket = io('http://localhost:5000');
-    socket.on('news', (data) => console.log(data))
+    // const socket = io('http://localhost:5000');
+    // socket.on('SERVER: UPDATE_CHOICE', (data) => console.log(data))
   }
 
   render() {
@@ -40,8 +40,7 @@ class App extends Component {
 
 const mapdispatchtoprops = (dispatch) => {
   return {
-    onFetchUser: () => dispatch(actionCreators.fetchUser()),
-    onTest: () => dispatch(actionCreators.test())
+    onFetchUser: () => dispatch(actionCreators.fetchUser())
   };
 };
 

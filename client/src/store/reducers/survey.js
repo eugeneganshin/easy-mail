@@ -8,9 +8,6 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_SURVEYS:
       return action.payload;
 
-    case actionTypes.TEST:
-      return action.payload
-
     default:
       return state;
   }

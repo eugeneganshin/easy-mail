@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
+
 import * as actionCreators from "../../store/actions/index";
 
 class SurveyList extends Component {
   componentDidMount() {
     this.props.onFetchSurveys();
+    this.props.onSocket()
+    console.log(this.props)
   }
 
   renderSurveys() {
@@ -22,6 +25,7 @@ class SurveyList extends Component {
           <div className="card-action">
             <a>Yes: {survey.yes}</a>
             <a>No: {survey.no}</a>
+            {/* <p>{}</p> */}
           </div>
         </div>
       );
@@ -29,6 +33,7 @@ class SurveyList extends Component {
   }
 
   render() {
+    console.log(this.props)
     return <div>{this.renderSurveys()}</div>;
   }
 }
@@ -36,12 +41,14 @@ class SurveyList extends Component {
 const mapStateToProps = (state) => {
   return {
     surveys: state.surveys,
+    socket: state.socket
   };
 };
 
 const mapdispatchtoprops = (dispatch) => {
   return {
     onFetchSurveys: () => dispatch(actionCreators.fetchSurveys()),
+    onSocket: () => dispatch({ type: 'server/hello', data: 'Hello!' })
   };
 };
 

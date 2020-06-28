@@ -15,9 +15,4 @@ const surveySchema = new Schema({
   lastResponded: Date,
 });
 
-// surveySchema.pre(/^find/, function (next) {
-//   this.populate("_user");
-//   next();
-// });
-
 mongoose.model("surveys", surveySchema);
