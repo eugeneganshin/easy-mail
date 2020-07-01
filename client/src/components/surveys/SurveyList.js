@@ -41,7 +41,8 @@ class SurveyList extends Component {
 const mapStateToProps = (state) => {
   return {
     surveys: state.surveys,
-    socket: state.socket
+    socket: state.socket,
+    choice: state.socket.choice
   };
 };
 

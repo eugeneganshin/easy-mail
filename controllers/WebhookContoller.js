@@ -10,10 +10,10 @@ class WebhookController {
         this.io = io
     }
 
-    getChoice = (req, res) => {
+    getChoice = async (req, res) => {
         const p = new Path("/api/surveys/:surveyId/:choice");
 
-        const c = _.chain(req.body)
+        _.chain(req.body)
             .map((event) => {
                 const match = p.test(new URL(event.url).pathname);
 
@@ -26,29 +26,49 @@ class WebhookController {
             })
             .compact()
             .uniqBy("email", "surveyId")
-            .each(({ surveyId, email, choice }) => {
-                Survey.updateOne(
-                    {
-                        _id: surveyId,
-                        recipients: {
-                            $elemMatch: { email: email, responded: false },
-                        },
+            .each(async ({ surveyId, email, choice }) => {
+                const updS = await Survey.findOneAndUpdate({
+                    _id: surveyId,
+                    recipients: {
+                        $elemMatch: { email: email, responded: true }, // test to true
                     },
-                    {
-                        $inc: { [choice]: 1 },
-                        $set: { "recipients.$.responded": true },
-                        $lastResponded: new Date(),
-                    }
-                ).exec();
-                // Send the client notification via telegram.
+                }, {
+                    $inc: { [choice]: 1 },
+                    $set: { "recipients.$.responded": true },
+                    $lastResponded: new Date(),
+                }, {
+                    new: true
+                })
+                    .populate("_user")
+                    .select("-recipients")
+                    .exec()
+                // Returns null if filter did not matched.
+                await this.io.emit('action', { type: 'SERVER: CLIENT_CHOICE', data: updS })
+
+                // TODO: Send the client notification via telegram.
             })
             .value();
-
-        console.log(c)
-        // Emit the result to the client side via socket.
         res.send({});
-        // this.io.emit('SERVER: UPDATE_CHOICE', c)
     }
 }
 
 module.exports = WebhookController
+
+
+// ({ surveyId, email, choice }) => {
+//     const updS = await Survey.findOneAndUpdate({
+//         _id: surveyId,
+//         recipients: {
+//             $elemMatch: { email: email, responded: false },
+//         },
+    // }, {
+    //     $inc: { [choice]: 1 },
+    //     $set: { "recipients.$.responded": true },
+    //     $lastResponded: new Date(),
+    // }, {
+    //     new: true
+    // }
+//     ).exec()
+//     await this.io.emit('action', { type: 'SERVER: CLIENT_CHOICE', data: updS })
+//     // Send the client notification via telegram.
+//     await console.log(updS)
