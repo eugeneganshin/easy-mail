@@ -1,39 +1,33 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
+import SurveyCard from './SurveyCard'
+
 
 import * as actionCreators from "../../store/actions/index";
 
 class SurveyList extends Component {
   componentDidMount() {
     this.props.onFetchSurveys();
-    this.props.onSocket()
-    console.log(this.props)
   }
 
   renderSurveys() {
-    return this.props.surveys.reverse().map((survey) => {
+    return this.props.surveys.reverse().map((survey, i) => {
       return (
-        <div className="card teal darken-1" key={survey._id}>
-          <div className="card-content white-text">
-            <span className="card-title">{survey.title}</span>
-            <p>{survey.body}</p>
-            <p className="right">
-              Sent on: {new Date(survey.dateSent).toLocaleDateString()}
-            </p>
-          </div>
-          <div className="card-action">
-            <a>Yes: {survey.yes}</a>
-            <a>No: {survey.no}</a>
-            {/* <p>{}</p> */}
-          </div>
-        </div>
+        <SurveyCard
+          key={i}
+          id={survey._id}
+          title={survey.title}
+          body={survey.body}
+          dateSent={survey.dateSent}
+          yes={survey.yes}
+          no={survey.no} />
       );
     });
   }
 
   render() {
-    console.log(this.props)
+
     return <div>{this.renderSurveys()}</div>;
   }
 }

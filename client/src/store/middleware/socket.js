@@ -1,15 +1,15 @@
 import { updateObject } from '../utility'
 const INITIAL_STATE = {
-    choice: null
+    data: null
 }
 
 const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case 'SERVER: CLIENT_CHOICE':
+        case 'SOCKET_SERVER: CLIENT_CHOICE':
             // updateObject(state, action.data)
             console.log(state)
-            console.log(action)
-            return state
+            console.log(action.payload)
+            return updateObject(state, { data: action.payload })
         default:
             return state;
     }

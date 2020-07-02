@@ -43,8 +43,8 @@ class WebhookController {
                     .select("-recipients")
                     .exec()
                 // Returns null if filter did not matched.
-                await this.io.emit('action', { type: 'SERVER: CLIENT_CHOICE', data: updS })
-
+                await this.io.emit('action', { type: 'SOCKET_SERVER: CLIENT_CHOICE', payload: updS })
+                // This goes to surveys. Not socket.
                 // TODO: Send the client notification via telegram.
             })
             .value();
@@ -53,22 +53,3 @@ class WebhookController {
 }
 
 module.exports = WebhookController
-
-
-// ({ surveyId, email, choice }) => {
-//     const updS = await Survey.findOneAndUpdate({
-//         _id: surveyId,
-//         recipients: {
-//             $elemMatch: { email: email, responded: false },
-//         },
-    // }, {
-    //     $inc: { [choice]: 1 },
-    //     $set: { "recipients.$.responded": true },
-    //     $lastResponded: new Date(),
-    // }, {
-    //     new: true
-    // }
-//     ).exec()
-//     await this.io.emit('action', { type: 'SERVER: CLIENT_CHOICE', data: updS })
-//     // Send the client notification via telegram.
-//     await console.log(updS)
