@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import { connect } from "react-redux";
 
 import SurveyCard from './SurveyCard'
@@ -11,8 +11,8 @@ class SurveyList extends Component {
     this.props.onFetchSurveys();
   }
 
-  renderSurveys() {
-    return this.props.surveys.reverse().map((survey, i) => {
+  render() {
+    return this.props.surveys.map((survey, i) => {
       return (
         <SurveyCard
           key={i}
@@ -25,25 +25,17 @@ class SurveyList extends Component {
       );
     });
   }
-
-  render() {
-
-    return <div>{this.renderSurveys()}</div>;
-  }
 }
 
 const mapStateToProps = (state) => {
   return {
-    surveys: state.surveys,
-    socket: state.socket,
-    choice: state.socket.choice
+    surveys: state.surveys
   };
 };
 
 const mapdispatchtoprops = (dispatch) => {
   return {
-    onFetchSurveys: () => dispatch(actionCreators.fetchSurveys()),
-    onSocket: () => dispatch({ type: 'server/hello', data: 'Hello!' })
+    onFetchSurveys: () => dispatch(actionCreators.fetchSurveys())
   };
 };
 

@@ -19,10 +19,6 @@ class Payments extends Component {
   }
 }
 
-// const mapStateToProps = (state) => {
-//   return {}
-// }
-
 const mapdispatchtoprops = (dispatch) => {
   return {
     onToken: (token) => dispatch(actionCreators.handleToken(token)),

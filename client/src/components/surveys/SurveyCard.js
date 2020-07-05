@@ -1,54 +1,41 @@
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import { connect } from 'react-redux'
 
-import Choice from './Choice/Choice'
-
 class SurveyCard extends Component {
-    renderComponent() {
-        if (this.props.surveyData.data !== null) {
-            return (
-                <div className="card teal darken-1" key={this.props.surveyData.data._id}>
-                    <div className="card-content white-text">
-                        <span className="card-title">{this.props.surveyData.data.title}</span>
-                        <p>{this.props.surveyData.data.body}</p>
-                        <p className="right">
-                            Sent on: {new Date(this.props.surveyData.data.dateSent).toLocaleDateString()}
-                        </p>
-                    </div>
-                    <div className="card-action">
-                        <a>Yes: {this.props.surveyData.data.yes}</a>
-                        <a>No: {this.props.surveyData.data.no}</a>
-                    </div>
-                </div>
-            )
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (
+            nextProps.no !== this.props.no ||
+            nextProps.yes !== this.props.yes
+        ) {
+            return true
         } else {
-            return (
-                <div className="card teal darken-1" key={this.props._id}>
-                    <div className="card-content white-text">
-                        <span className="card-title">{this.props.title}</span>
-                        <p>{this.props.body}</p>
-                        <p className="right">
-                            Sent on: {new Date(this.props.dateSent).toLocaleDateString()}
-                        </p>
-                    </div>
-                    <div className="card-action">
-                        <a>Yes: {this.props.yes}</a>
-                        <a>No: {this.props.no}</a>
-                    </div>
-                </div>
-            )
+            return false
         }
     }
 
+
     render() {
-        return this.renderComponent()
+        return (
+            <div className="card teal darken-1" key={this.props._id}>
+                <div className="card-content white-text">
+                    <span className="card-title">{this.props.title}</span>
+                    <p>{this.props.body}</p>
+                    <p className="right">
+                        Sent on: {new Date(this.props.dateSent).toLocaleDateString()}
+                    </p>
+                </div>
+                <div className="card-action">
+                    <a>Yes: {this.props.yes}</a>
+                    <a>No: {this.props.no}</a>
+                </div>
+            </div>
+        )
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        surveyData: state.socket
-    }
-}
 
-export default connect(mapStateToProps)(SurveyCard)
+// TODO: try ownProps of redux...
+// https://stackoverflow.com/questions/33080657/react-update-one-item-in-a-list-without-recreating-all-items
+
+export default SurveyCard

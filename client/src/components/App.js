@@ -14,14 +14,8 @@ import { actionTypes } from "redux-form";
 
 class App extends Component {
 
-  // TODO: socket.on('clientResponede', (res) => {
-  //   this.props.onTest(res)
-  // })
-
   componentDidMount() {
     this.props.onFetchUser();
-    // const socket = io('http://localhost:5000');
-    // socket.on('SERVER: UPDATE_CHOICE', (data) => console.log(data))
   }
 
   render() {

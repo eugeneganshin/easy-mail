@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
     authenticated: authReducer,
     surveys: surveyReducer,
     form: formReducer,
-    socket: socketReducer
+    socket: socketReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

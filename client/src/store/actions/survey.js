@@ -3,14 +3,20 @@ import axios from "axios";
 
 export const submitSurvey = (values, history) => {
   return async (dispatch) => {
-    const res = await axios.post("/api/surveys", values);
+    try {
+      const res = await axios.post("/api/surveys", values);
+      history.push("/surveys");
 
-    history.push("/surveys");
-
-    dispatch({
-      type: actionTypes.FETCH_USER,
-      payload: res.data,
-    });
+      dispatch({
+        type: actionTypes.FETCH_USER,
+        payload: res.data,
+      });
+    } catch (error) {
+      dispatch({
+        type: "SURVEY_ERROR",
+        error: error
+      })
+    }
   };
 };
 
