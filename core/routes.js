@@ -16,7 +16,7 @@ const WebhookContoller = require('../controllers/WebhookContoller')
 
 // Controllers import
 
-const createRoutes = (app, io) => {
+const createRoutes = (app, io, bot) => {
     // CONTROLLERS
     AuthC = new AuthController(io)
     CreditsC = new CreditsController(io)
@@ -77,6 +77,12 @@ const createRoutes = (app, io) => {
     app.post('/api/surveys', AuthC.isLogedIn, CreditsC.isEnoughCredits, SurveyC.newSurvey);
     app.post('/api/surveys/webhook', WebhookC.getChoice);
     app.get('/api/surveys/:id/:choice', (req, res) => { res.send("Thanks for voting!") })
+
+    // TELEGRAM BOT
+    bot.start((ctx) => ctx.reply('Welcome'))
+    bot.help((ctx) => ctx.reply('Send me a sticker'))
+    bot.on('sticker', (ctx) => ctx.reply('👍'))
+    bot.hears('hi', (ctx) => ctx.reply('Hey LOL'))
 }
 
 module.exports = createRoutes

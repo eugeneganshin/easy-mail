@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
+import tgLogo from '../logos/telegram.png'
 import * as actionCreators from '../store/actions/index'
 import Payments from './Payments'
 
@@ -19,13 +20,14 @@ class Header extends Component {
       default:
         return (
           <React.Fragment>
-            <li key="1">
+            <li key='1'><div><a target="_blank" href="https://t.me/easy_mail_bot">Telegram bot!</a></div></li>
+            <li key="2">
               <Payments />
             </li>
-            <li key="2" style={{ margin: '0 10px' }}>
+            <li key="3" style={{ margin: '0 10px' }}>
               Credits: <span>{this.props.authenticated.credits}</span>
             </li>
-            <li key="3">
+            <li key="4">
               <a onClick={this.props.onLogout}>Logout</a>
             </li>
           </React.Fragment>
