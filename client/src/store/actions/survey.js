@@ -13,7 +13,7 @@ export const submitSurvey = (values, history) => {
       });
     } catch (error) {
       dispatch({
-        type: "SURVEY_ERROR",
+        type: actionTypes.ERROR_MODAL,
         error: error
       })
     }

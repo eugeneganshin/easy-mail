@@ -75,10 +75,7 @@ const createRoutes = (app, io) => {
     // SURVEY ROUTES
     app.get('/api/surveys', AuthC.isLogedIn, SurveyC.getSurvey)
     app.post('/api/surveys', AuthC.isLogedIn, CreditsC.isEnoughCredits, SurveyC.newSurvey);
-    app.post('/api/surveys/webhook', ((req, res, next) => {
-        console.log('something happened on this route')
-        return next()
-    }), WebhookC.getChoice);
+    app.post('/api/surveys/webhook', WebhookC.getChoice);
     app.get('/api/surveys/:id/:choice', (req, res) => { res.send("Thanks for voting!") })
 }
 

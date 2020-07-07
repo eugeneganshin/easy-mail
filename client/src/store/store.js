@@ -7,6 +7,7 @@ import io from 'socket.io-client';
 import authReducer from "./reducers/auth";
 import surveyReducer from "./reducers/survey";
 import socketReducer from './middleware/socket'
+import modalReducer from './reducers/modals'
 import logger from './middleware/logger'
 
 
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
     authenticated: authReducer,
     surveys: surveyReducer,
     form: formReducer,
+    modal: modalReducer,
     socket: socketReducer,
 });
 
