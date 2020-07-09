@@ -37,7 +37,8 @@
     "sendgrid": "^5.2.3",
     "socket.io": "^2.3.0",
     "stripe": "^8.63.0",
-    "telegraf": "^3.38.0"
+    "telegraf": "^3.38.0",
+    "telegraf-inline-menu": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4",
