@@ -1,12 +1,19 @@
+import produce from 'immer'
 const INITIAL_STATE = {
     data: null
 }
 
 const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case 'SOCKET_SERVER: CLIENT_CHOICE':
-            // FOR LATER USE
+        case 'SOCKET_SERVER: NOT_LOGGED_IN':
             return state
+
+        case 'SOCKET_SERVER: LOGGED_IN':
+            const updatedState = produce(state, (draft) => {
+                draft['data'] = action.payload
+            })
+            console.log(action)
+            return updatedState
 
         default:
             return state;

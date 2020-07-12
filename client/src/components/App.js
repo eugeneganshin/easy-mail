@@ -26,10 +26,6 @@ class App extends Component {
           <Route exact path="/" component={Landing} />
           <Route exact path="/surveys" component={Dashboard} />
           <Route path="/surveys/new" component={SurveyNew} />
-          <Route exact path='/telegram' component={() => {
-            window.location.href = 'https://t.me/easy_mail_bot';
-            return true;
-          }} />
         </div>
       </BrowserRouter>
     );

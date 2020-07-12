@@ -20,7 +20,7 @@ class Header extends Component {
       default:
         return (
           <React.Fragment>
-            <li key='1'><div><a href="/telegram">Telegram bot!</a></div></li>
+            {this.telegramLink()}
             <li key="2">
               <Payments />
             </li>
@@ -35,7 +35,22 @@ class Header extends Component {
     }
   }
 
+  telegramLink() {
+    if (this.props.url) {
+      return (
+        <li key='1'>
+          <div>
+            <a target="_blank" href={`https://t.me/easy_mail_bot?start=${this.props.url}`}>Telegram bot!</a>
+          </div>
+        </li>
+
+      )
+    }
+    return null
+  }
+
   render() {
+    console.log(this.props)
     return (
       <nav>
         <div className="nav-wrapper">
@@ -55,6 +70,7 @@ class Header extends Component {
 const mapStateToProps = (state) => {
   return {
     authenticated: state.authenticated.authenticated,
+    url: state.socket.data
   }
 }
 

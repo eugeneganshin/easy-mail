@@ -3,12 +3,21 @@ const { MenuTemplate, MenuMiddleware, createBackMainMenuButtons } = require('tel
 const keys = require('../config/keys')
 
 const bot = new Telegraf(keys.TELEGRAM_TOKEN)
-bot.on('text', ({ replyWithHTML }) => replyWithHTML('<b>Hello</b>'))
 
+
+/*a
+* 1) Create a bot with a suitable username, e.g. @ExampleComBot
+* 2) Set up a webhook for incoming messages
+* 3) Generate a random string of a sufficient length, e.g. $memcache_key = "vCH1vGWJxfSeofSAs0K5PA"
+* 4) Put the value 123 with the key $memcache_key into Memcache for 3600 seconds (one hour)
+* 5) Show our user the button https://t.me/ExampleComBot?start=vCH1vGWJxfSeofSAs0K5PA
+* 6) Configure the webhook processor to query Memcached with the parameter that is passed in incoming messages beginning with /start. If the key exists, record the chat_id passed to the webhook as telegram_chat_id for the user 123. Remove the key from Memcache.
+* 7) Now when we want to send a notification to the user 123, check if they have the field telegram_chat_id. If yes, use the sendMessage method in the Bot API to send them a message in Telegram.
+*/
 
 
 // TG WEBHOOK
-bot.telegram.setWebhook('https://b0ae61a5d867.ngrok.io/secret-path')
+bot.telegram.setWebhook('https://0e39c2970292.ngrok.io/api/telegram')
 module.exports = bot
 
 // https://t.me/mybot?start=parameter deep link in frontend

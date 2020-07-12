@@ -15,6 +15,7 @@ const TelegramController = require('../controllers/TelegramController')
 
 
 
+
 // Controllers import
 
 const createRoutes = (app, io, bot) => {
@@ -23,7 +24,7 @@ const createRoutes = (app, io, bot) => {
     CreditsC = new CreditsController(io)
     SurveyC = new SurveyController(io, bot)
     WebhookC = new WebhookContoller(io)
-    TelegramC = new TelegramController(bot)
+    TelegramC = new TelegramController(bot, io)
 
     // MIDDLEWARE
     app.use(cors())
@@ -60,12 +61,12 @@ const createRoutes = (app, io, bot) => {
         res.send(user)
     })
 
-    // TG
-    app.get('/telegram', (req, res) => {
-        console.log(req.user)
-        // console.log(res)
-        res.redirect('https://t.me/easy_mail_bot')
-    })
+    // TG (deprecated)
+    // app.get('/telegram', (req, res) => {
+    //     console.log(req.user)
+
+    //     res.redirect('https://t.me/easy_mail_bot')
+    // })
 
 
     // PASSPORT ROUTES
@@ -81,19 +82,24 @@ const createRoutes = (app, io, bot) => {
     })
 
     // SURVEY ROUTES
-    app.get('/api/surveys', AuthC.isLogedIn, SurveyC.getSurvey)
+    app.get('/api/surveys', AuthC.isLogedIn, SurveyC.getSurvey, TelegramC.emitTelegramURL)
     app.post('/api/surveys', AuthC.isLogedIn, CreditsC.isEnoughCredits, SurveyC.newSurvey);
     app.post('/api/surveys/webhook', WebhookC.getChoice);
     app.get('/api/surveys/:id/:choice', (req, res) => { res.send("Thanks for voting!") })
 
+    app.post('/api/telegram', (req, res) => {
+        console.log('SOMETHING HAPPENED')
 
-    // TELEGRAM ROUTE AND MIDDLEWARE
-    app.post(`/secret-path`, (req, res) => {
-        console.log('LUL')
+        bot.start((ctx) => {
+            console.log('SOMETHING HAPPENED in bot')
+            ctx.reply('Welcome')
+        })
         return bot.handleUpdate(req.body, res)
     })
 
-    app.use(bot.webhookCallback('/secret-path'))
+    // TELEGRAM ROUTE AND MIDDLEWARE
+
+    app.use(bot.webhookCallback('/api/telegram'))
 }
 
 module.exports = createRoutes
