@@ -5,8 +5,9 @@ const Mailer = require("../services/Mailer");
 const surveyTemplate = require("../services/emailTemplates/suveyTemplate");
 
 class SurveyController {
-    constructor(io) {
+    constructor(io, bot) {
         this.io = io
+        this.bot = bot
     }
 
     getSurvey = async (req, res, next) => {

@@ -4,6 +4,8 @@ const app = express();
 const server = require('http').createServer(app);
 
 
+
+
 require('./core/db')
 
 require('./models/userModel')
@@ -17,15 +19,6 @@ const bot = require('./core/telegram')
 const io = createSocket(server)
 
 createRoutes(app, io, bot)
-
-// const bot = new Telegraf(process.env.TELEGRAM_TOKEN)
-// bot.start((ctx) => ctx.reply('Welcome'))
-// bot.help((ctx) => ctx.reply('Send me a sticker'))
-// bot.on('sticker', (ctx) => ctx.reply('👍'))
-// bot.hears('hi', (ctx) => ctx.reply('Hey there'))
-// bot.launch()
-
-
 
 const PORT = process.env.PORT || 5000
 

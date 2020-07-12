@@ -35,6 +35,7 @@ const SurveyFormReview = (props) => {
         <button
           className="green btn-flat right white-text"
           onClick={() => props.onSubmitSurvey(props.formValues, props.history)}
+
         >
           <i className="material-icons right">email</i>
         Send Survey
@@ -53,7 +54,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onSubmitSurvey: () => dispatch(actionCreators.submitSurvey()),
+    onSubmitSurvey: (val, history) => dispatch(actionCreators.submitSurvey(val, history)),
     onHideModal: () => dispatch(actionCreators.hideModal())
   }
 }

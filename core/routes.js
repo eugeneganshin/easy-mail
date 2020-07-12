@@ -11,6 +11,7 @@ const AuthController = require('../controllers/AuthController')
 const CreditsController = require('../controllers/CreditsController')
 const SurveyController = require('../controllers/SurveyController')
 const WebhookContoller = require('../controllers/WebhookContoller')
+const TelegramController = require('../controllers/TelegramController')
 
 
 
@@ -20,8 +21,9 @@ const createRoutes = (app, io, bot) => {
     // CONTROLLERS
     AuthC = new AuthController(io)
     CreditsC = new CreditsController(io)
-    SurveyC = new SurveyController(io)
+    SurveyC = new SurveyController(io, bot)
     WebhookC = new WebhookContoller(io)
+    TelegramC = new TelegramController(bot)
 
     // MIDDLEWARE
     app.use(cors())
@@ -32,7 +34,6 @@ const createRoutes = (app, io, bot) => {
             keys: [keys.COOKIE_KEY],
         }),
     )
-
     app.use(passport.initialize())
     app.use(passport.session())
     if (process.env.NODE_ENV === 'production') {
@@ -59,6 +60,13 @@ const createRoutes = (app, io, bot) => {
         res.send(user)
     })
 
+    // TG
+    app.get('/telegram', (req, res) => {
+        console.log(req.user)
+        // console.log(res)
+        res.redirect('https://t.me/easy_mail_bot')
+    })
+
 
     // PASSPORT ROUTES
     app.get('/auth/google', passport.authenticate('google', {
@@ -78,11 +86,14 @@ const createRoutes = (app, io, bot) => {
     app.post('/api/surveys/webhook', WebhookC.getChoice);
     app.get('/api/surveys/:id/:choice', (req, res) => { res.send("Thanks for voting!") })
 
-    // TELEGRAM BOT
-    bot.start((ctx) => ctx.reply('Welcome'))
-    bot.help((ctx) => ctx.reply('Send me a sticker'))
-    bot.on('sticker', (ctx) => ctx.reply('👍'))
-    bot.hears('hi', (ctx) => ctx.reply('Hey LOL'))
+
+    // TELEGRAM ROUTE AND MIDDLEWARE
+    app.post(`/secret-path`, (req, res) => {
+        console.log('LUL')
+        return bot.handleUpdate(req.body, res)
+    })
+
+    app.use(bot.webhookCallback('/secret-path'))
 }
 
 module.exports = createRoutes

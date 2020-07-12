@@ -2,199 +2,248 @@ const { Telegraf } = require('telegraf')
 const { MenuTemplate, MenuMiddleware, createBackMainMenuButtons } = require('telegraf-inline-menu')
 const keys = require('../config/keys')
 
+const bot = new Telegraf(keys.TELEGRAM_TOKEN)
+bot.on('text', ({ replyWithHTML }) => replyWithHTML('<b>Hello</b>'))
+
+
+
+// TG WEBHOOK
+bot.telegram.setWebhook('https://b0ae61a5d867.ngrok.io/secret-path')
+module.exports = bot
+
+// https://t.me/mybot?start=parameter deep link in frontend
+// backend webhook for handling it
+// depending on a link telegram should know if the user is authenticated
+// if authenticated add the telegram username to DB
+// check db before sending anydata!
+
 /*
 *    MENU STRUCTURE:
 *
-*    [INFO], [HELP], [SHOW MY SURVEYS], [CREATE NEW SURVEY], [VISIT WEBPAGE] 
+*    [INFO], [HELP], [SHOW MY SURVEYS], [CREATE NEW SURVEY], [VISIT WEBPAGE]
 */
 
-const menu = new MenuTemplate(() => 'Main Menu\n')
+// const menu = new MenuTemplate((ctx) => 'Main Menu\n')
 
-// TOGGLE SOMETHING
-let mainMenuToggle = false
-menu.toggle('toggle me', 'toggle me', {
-    set: (_, newState) => {
-        mainMenuToggle = newState
-        return true
-    },
-    isSet: () => mainMenuToggle
-})
 
-// INTERACT
-menu.interact('interaction', 'interact', {
-    hide: () => mainMenuToggle,
-    do: async ctx => {
-        await ctx.answerCbQuery('you clicked me')
-        return false
-    }
-})
+// // INTERACT
+// menu.interact('INFO', 'info', {
+//     do: async ctx => {
+//         await ctx.reply('Info')
+//         return true
+//     }
+// })
 
-// INTERACT AND UPDATE
-menu.interact('update after action', 'update afterwards', {
-    joinLastRow: true,
-    hide: () => mainMenuToggle,
-    do: async ctx => {
-        await ctx.answerCbQuery('I will update the menu now…')
+// // INTERACT AND UPDATE
+// menu.interact('HELP', 'help', {
+//     joinLastRow: true,
+//     do: async ctx => {
+//         await ctx.answerCbQuery('help info')
+//         return true
 
-        return true
+//         // You can return true to update the same menu or use a relative path
+//         // For example '.' for the same menu or '..' for the parent menu
+//         // return '.'
+//     }
+// })
 
-        // You can return true to update the same menu or use a relative path
-        // For example '.' for the same menu or '..' for the parent menu
-        // return '.'
-    }
-})
+// menu.interact('Create New Survey', 'create', {
+//     do: async ctx => {
+//         await ctx.answerCbQuery('create new survey')
+//         return true
 
-// SELECT SOMETHING
-let selectedKey = 'b'
-menu.select('select', ['A', 'B', 'C'], {
-    set: async (ctx, key) => {
-        selectedKey = key
-        await ctx.answerCbQuery(`you selected ${key}`)
-        return true
-    },
-    isSet: (_, key) => key === selectedKey
-})
+//         // You can return true to update the same menu or use a relative path
+//         // For example '.' for the same menu or '..' for the parent menu
+//         // return '.'
+//     }
+// })
 
-// SUBMENU WITH LOGIC
-const foodMenu = new MenuTemplate('People like food. What do they like?')
+// menu.url('Visit Webpage', 'https://d7dd12cb267b.ngrok.io/')
+// // menu.interact('Visit Webpage', 'webpage', {
+// //     do: async ctx => {
+// //         await ctx.answerCbQuery('page')
+// //         return true
 
-const people = { Mark: {}, Paul: {} }
-const food = ['bread', 'cake', 'bananas']
+// //         // You can return true to update the same menu or use a relative path
+// //         // For example '.' for the same menu or '..' for the parent menu
+// //         // return '.'
+// //     }
+// // })
 
-function personButtonText(_, key) {
-    const entry = people[key]
-    if (entry.food) {
-        return `${key} (${entry.food})`
-    }
-
-    return key
-}
-
-function foodSelectText(ctx) {
-    const person = ctx.match[1]
-    const hisChoice = people[person].food
-    if (!hisChoice) {
-        return `${person} is still unsure what to eat.`
-    }
-
-    return `${person} likes ${hisChoice} currently.`
-}
-
-const foodSelectSubmenu = new MenuTemplate(foodSelectText)
-
-foodSelectSubmenu.toggle('Prefer tea', 'tea', {
-    set: (ctx, choice) => {
-        const person = ctx.match[1]
-        people[person].tee = choice
-        return true
-    },
-    isSet: ctx => {
-        const person = ctx.match[1]
-        return people[person].tee === true
-    }
-})
-foodSelectSubmenu.select('food', food, {
-    set: (ctx, key) => {
-        const person = ctx.match[1]
-        people[person].food = key
-        return true
-    },
-    isSet: (ctx, key) => {
-        const person = ctx.match[1]
-        return people[person].food === key
-    }
-})
-foodSelectSubmenu.manualRow(createBackMainMenuButtons())
-foodMenu.chooseIntoSubmenu('person', () => Object.keys(people), foodSelectSubmenu, {
-    buttonText: personButtonText,
-    columns: 2
-})
-foodMenu.manualRow(createBackMainMenuButtons())
-
-menu.submenu('Food menu', 'food', foodMenu, {
-    hide: () => mainMenuToggle
-})
-
-// SUBMENU WITH VIDEO
-let mediaOption = 'photo1'
-const mediaMenu = new MenuTemplate(() => {
-    if (mediaOption === 'video') {
-        return {
-            type: 'video',
-            media: 'https://telegram.org/img/t_main_Android_demo.mp4',
-            text: 'Just a caption for a video'
-        }
-    }
-
-    if (mediaOption === 'animation') {
-        return {
-            type: 'animation',
-            media: 'https://telegram.org/img/t_main_Android_demo.mp4',
-            text: 'Just a caption for an animation'
-        }
-    }
-
-    if (mediaOption === 'photo2') {
-        return {
-            type: 'photo',
-            media: 'https://telegram.org/img/SiteAndroid.jpg',
-            text: 'Just a caption for a *photo*',
-            parse_mode: 'Markdown'
-        }
-    }
-
-    if (mediaOption === 'document') {
-        return {
-            type: 'document',
-            media: 'https://telegram.org/file/464001088/1/bI7AJLo7oX4.287931.zip/374fe3b0a59dc60005',
-            text: 'Just a caption for a <b>document</b>',
-            parse_mode: 'HTML'
-        }
-    }
-
-    if (mediaOption === 'just text') {
-        return {
-            text: 'Just some text'
-        }
-    }
-
-    return {
-        type: 'photo',
-        media: 'https://telegram.org/img/SiteiOs.jpg'
-    }
-})
-mediaMenu.interact('Just a button', 'randomButton', {
-    do: async ctx => {
-        await ctx.answerCbQuery('Just a callback query answer')
-        return false
-    }
-})
-mediaMenu.select('type', ['animation', 'document', 'photo1', 'photo2', 'video', 'just text'], {
-    columns: 2,
-    isSet: (_, key) => mediaOption === key,
-    set: (_, key) => {
-        mediaOption = key
-        return true
-    }
-})
-mediaMenu.manualRow(createBackMainMenuButtons())
-
-menu.submenu('Media Menu', 'media', mediaMenu)
 
 
 
 // ======================================== //
-const bot = new Telegraf(keys.TELEGRAM_TOKEN)
 
-// ERRORS
-bot.catch(error => {
-    console.log('telegraf error', error.response, error.parameters, error.on || error)
-})
+// // ERRORS
+// bot.catch(error => {
+//     console.log('telegraf error', error.response, error.parameters, error.on || error)
+// })
 
-const menuMiddleware = new MenuMiddleware('/', menu)
-bot.command('start', ctx => menuMiddleware.replyToContext(ctx))
-bot.use(menuMiddleware)
+// const menuMiddleware = new MenuMiddleware('/', menu)
+// bot.command('start', ctx => {
+//     console.log(ctx)
+//     return menuMiddleware.replyToContext(ctx)
+// })
+// bot.use((ctx, next) => {
+//     if (ctx.callbackQuery) {
+//         console.log('callback data just happened', ctx.callbackQuery.data)
+//     }
 
-bot.launch()
+//     return next()
+// })
+// bot.use(menuMiddleware)
 
-module.exports = bot
+// bot.launch()
+
+
+
+// // SELECT SOMETHING
+// let selectedKey = 'b'
+// menu.select('select', ['A', 'B', 'C'], {
+//     set: async (ctx, key) => {
+//         selectedKey = key
+//         await ctx.answerCbQuery(`you selected ${key}`)
+//         return true
+//     },
+//     isSet: (_, key) => key === selectedKey
+// })
+
+
+
+// // TOGGLE SOMETHING
+// let mainMenuToggle = false
+// menu.toggle('toggle me', 'toggle me', {
+//     set: (_, newState) => {
+//         mainMenuToggle = newState
+//         return true
+//     },
+//     isSet: () => mainMenuToggle
+// })
+
+// // SUBMENU WITH LOGIC
+// const foodMenu = new MenuTemplate('People like food. What do they like?')
+
+// const people = { Mark: {}, Paul: {} }
+// const food = ['bread', 'cake', 'bananas']
+
+// function personButtonText(_, key) {
+//     const entry = people[key]
+//     if (entry.food) {
+//         return `${key} (${entry.food})`
+//     }
+
+//     return key
+// }
+
+// function foodSelectText(ctx) {
+//     const person = ctx.match[1]
+//     const hisChoice = people[person].food
+//     if (!hisChoice) {
+//         return `${person} is still unsure what to eat.`
+//     }
+
+//     return `${person} likes ${hisChoice} currently.`
+// }
+
+// const foodSelectSubmenu = new MenuTemplate(foodSelectText)
+
+// foodSelectSubmenu.toggle('Prefer tea', 'tea', {
+//     set: (ctx, choice) => {
+//         const person = ctx.match[1]
+//         people[person].tee = choice
+//         return true
+//     },
+//     isSet: ctx => {
+//         const person = ctx.match[1]
+//         return people[person].tee === true
+//     }
+// })
+// foodSelectSubmenu.select('food', food, {
+//     set: (ctx, key) => {
+//         const person = ctx.match[1]
+//         people[person].food = key
+//         return true
+//     },
+//     isSet: (ctx, key) => {
+//         const person = ctx.match[1]
+//         return people[person].food === key
+//     }
+// })
+// foodSelectSubmenu.manualRow(createBackMainMenuButtons())
+// foodMenu.chooseIntoSubmenu('person', () => Object.keys(people), foodSelectSubmenu, {
+//     buttonText: personButtonText,
+//     columns: 2
+// })
+// foodMenu.manualRow(createBackMainMenuButtons())
+
+// menu.submenu('Food menu', 'food', foodMenu, {
+//     hide: () => mainMenuToggle
+// })
+
+
+// // SUBMENU WITH VIDEO
+// let mediaOption = 'photo1'
+// const mediaMenu = new MenuTemplate(() => {
+//     if (mediaOption === 'video') {
+//         return {
+//             type: 'video',
+//             media: 'https://telegram.org/img/t_main_Android_demo.mp4',
+//             text: 'Just a caption for a video'
+//         }
+//     }
+
+//     if (mediaOption === 'animation') {
+//         return {
+//             type: 'animation',
+//             media: 'https://telegram.org/img/t_main_Android_demo.mp4',
+//             text: 'Just a caption for an animation'
+//         }
+//     }
+
+//     if (mediaOption === 'photo2') {
+//         return {
+//             type: 'photo',
+//             media: 'https://telegram.org/img/SiteAndroid.jpg',
+//             text: 'Just a caption for a *photo*',
+//             parse_mode: 'Markdown'
+//         }
+//     }
+
+//     if (mediaOption === 'document') {
+//         return {
+//             type: 'document',
+//             media: 'https://telegram.org/file/464001088/1/bI7AJLo7oX4.287931.zip/374fe3b0a59dc60005',
+//             text: 'Just a caption for a <b>document</b>',
+//             parse_mode: 'HTML'
+//         }
+//     }
+
+//     if (mediaOption === 'just text') {
+//         return {
+//             text: 'Just some text'
+//         }
+//     }
+
+//     return {
+//         type: 'photo',
+//         media: 'https://telegram.org/img/SiteiOs.jpg'
+//     }
+// })
+// mediaMenu.interact('Just a button', 'randomButton', {
+//     do: async ctx => {
+//         await ctx.answerCbQuery('Just a callback query answer')
+//         return false
+//     }
+// })
+// mediaMenu.select('type', ['animation', 'document', 'photo1', 'photo2', 'video', 'just text'], {
+//     columns: 2,
+//     isSet: (_, key) => mediaOption === key,
+//     set: (_, key) => {
+//         mediaOption = key
+//         return true
+//     }
+// })
+// mediaMenu.manualRow(createBackMainMenuButtons())
+
+// menu.submenu('Media Menu', 'media', mediaMenu)

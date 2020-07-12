@@ -20,7 +20,7 @@ class Header extends Component {
       default:
         return (
           <React.Fragment>
-            <li key='1'><div><a target="_blank" href="https://t.me/easy_mail_bot">Telegram bot!</a></div></li>
+            <li key='1'><div><a href="/telegram">Telegram bot!</a></div></li>
             <li key="2">
               <Payments />
             </li>

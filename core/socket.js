@@ -1,8 +1,10 @@
 const socketIO = require('socket.io')
 
-// socketIoMiddleware = createSocketIoMiddleware(socket, [ 'post/', 'get/' ]);
-// From client side we can tell this socketIO server to do something 
-// on /post or /get or whatever.
+/* 
+* socketIoMiddleware = createSocketIoMiddleware(socket, [ 'post/', 'get/' ]);
+* From client side we can tell this socketIO server to do something 
+* on /post or /get or whatever.
+*/
 
 const createSocket = (server) => {
     const io = socketIO(server)
