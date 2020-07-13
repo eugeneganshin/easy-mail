@@ -17,7 +17,7 @@ const bot = new Telegraf(keys.TELEGRAM_TOKEN)
 
 
 // TG WEBHOOK
-bot.telegram.setWebhook('https://0e39c2970292.ngrok.io/api/telegram')
+bot.telegram.setWebhook('https://26364d81017a.ngrok.io/telegram')
 module.exports = bot
 
 // https://t.me/mybot?start=parameter deep link in frontend

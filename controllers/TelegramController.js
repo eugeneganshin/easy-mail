@@ -1,4 +1,8 @@
+const mongoose = require("mongoose");
 const base64url = require('base64url')
+
+const Survey = mongoose.model("surveys");
+const Users = mongoose.model('Users')
 const keys = require('../config/keys')
 
 class TelegramController {
@@ -7,33 +11,75 @@ class TelegramController {
         this.io = io
     }
 
-    test = async (req, res, next) => {
-        console.log(req.user)
-        bot.start((ctx) => ctx.reply('Welcome'))
-        bot.hears('hi', (ctx) => ctx.reply('Hey LOL'))
+    handleDeepLink = async (req, res, next) => {
+        // check the string for secret_key
 
+        if (req.body.message.text.startsWith('/start')) {
+            console.log(req.body.message.text)
+
+            this.#analyseLink(req.body.message.text)
+
+            // const message = req.body.message.text
+            // const hash = message.split(' ')[1]
+            // const decoded = await this.#base64urlDecode(hash)
+            // const userId = decoded.split('=')[1]
+
+            // const user = await Users.findById(userId)
+
+            // // TODO: record telegram_chat_id for the user.
+            // // console.log(user)
+            // req['user'] = user
+
+            next()
+        }
+
+        next()
+
+    }
+
+    isLoggedIn = async (req, res, next) => {
+        //check req.user or telegram_chat_id
         next()
     }
 
-    emitTelegramURL = async (req, res, next) => {
-        if (!req.user) {
-            await this.io.emit('action', { type: 'SOCKET_SERVER: NOT_LOGGED_IN', payload: null })
-            return res.status(401).send({ error: 'You are not logged in!' })
+    startBot = async (req, res) => {
+        if (req.user) {
+            return this.#startBotWithUser(req, res)
         }
 
-        await this.io.emit('action', {
-            type: 'SOCKET_SERVER: LOGGED_IN',
-            payload: this.#base64urlEncode(keys.TELEGRAM_SECRET_DEEP_LINK, req.body._id)
-        })
+        return this.#startBotNoUser(req, res)
+    }
+
+    #startBotWithUser = async (req, res) => {
+        console.log(req.user, 'WITH USER')
+        res.status(200)
+        this.bot.start((ctx) => ctx.reply('Welcome USER'))
+        this.bot.hears('hi', (ctx) => ctx.reply('Hey there'))
+        return this.bot.handleUpdate(req.body, res)
+    }
+
+    #startBotNoUser = async (req, res) => {
+        console.log(req.user, 'WITHOUT USER')
+        res.status(200)
+        this.bot.start((ctx) => ctx.reply('Welcome'))
+        this.bot.hears('hi', (ctx) => ctx.reply('Hey there'))
+        return this.bot.handleUpdate(req.body, res)
+    }
+
+    #analyseLink = async (link) => {
+        console.log(link)
         return
+        // const link = message.split(' ')[1]
+        // const decoded = await this.#base64urlDecode(hash)
+        // const userId = decoded.split('=')[1]
     }
 
-    #base64urlEncode = (string, id) => {
-        return base64url(`${string}=${id}`)
+    #base64urlEncode = async (string, id) => {
+        return await base64url(`${string}=${id}`)
     }
 
-    #base64urlDecode = (string) => {
-        return base64url.decode(string)
+    #base64urlDecode = async (string) => {
+        return await base64url.decode(string)
     }
 }
 

@@ -12,7 +12,7 @@ const CreditsController = require('../controllers/CreditsController')
 const SurveyController = require('../controllers/SurveyController')
 const WebhookContoller = require('../controllers/WebhookContoller')
 const TelegramController = require('../controllers/TelegramController')
-
+const SocketioController = require('../controllers/SocketioController')
 
 
 
@@ -25,6 +25,7 @@ const createRoutes = (app, io, bot) => {
     SurveyC = new SurveyController(io, bot)
     WebhookC = new WebhookContoller(io)
     TelegramC = new TelegramController(bot, io)
+    SocketioC = new SocketioController(bot, io)
 
     // MIDDLEWARE
     app.use(cors())
@@ -82,24 +83,48 @@ const createRoutes = (app, io, bot) => {
     })
 
     // SURVEY ROUTES
-    app.get('/api/surveys', AuthC.isLogedIn, SurveyC.getSurvey, TelegramC.emitTelegramURL)
+    app.get('/api/surveys', AuthC.isLogedIn, SurveyC.getSurvey, SocketioC.emitTelegramURL)
     app.post('/api/surveys', AuthC.isLogedIn, CreditsC.isEnoughCredits, SurveyC.newSurvey);
     app.post('/api/surveys/webhook', WebhookC.getChoice);
     app.get('/api/surveys/:id/:choice', (req, res) => { res.send("Thanks for voting!") })
 
-    app.post('/api/telegram', (req, res) => {
-        console.log('SOMETHING HAPPENED')
+    // TELEGRAM LOGIC
+    app.post('/telegram', TelegramC.handleDeepLink, TelegramC.isLoggedIn, TelegramC.startBot)
 
-        bot.start((ctx) => {
-            console.log('SOMETHING HAPPENED in bot')
-            ctx.reply('Welcome')
-        })
-        return bot.handleUpdate(req.body, res)
-    })
+    // app.post('/telegram', (req, res) => {
+    //     // if (req.body.message.text.startsWith('/start')) {
+    //     //     const hash = req.body.message.text.split(' ')[1]
 
-    // TELEGRAM ROUTE AND MIDDLEWARE
+    //     //     const decoded = TelegramC.decodeLink(hash)
+    //     //     console.log(decoded)
+    //     // }
 
-    app.use(bot.webhookCallback('/api/telegram'))
+    //     console.log('ERROR')
+    //     bot.start((ctx) => ctx.reply('Welcome'))
+    //     bot.hears('hi', (ctx) => ctx.reply('Hey there'))
+
+    //     return bot.handleUpdate(req.body, res)
+    // })
+
+    app.use(bot.webhookCallback('/telegram'))
 }
 
 module.exports = createRoutes
+
+
+
+// TelegramC = new TelegramController(bot, io)
+//     app.post('/telegram', (req, res) => {
+//         if (req.body.message.text.startsWith('/start')) {
+//             const hash = req.body.message.text.split(' ')[1]
+
+//             const decoded = TelegramC.decodeLink(hash)
+//             console.log(decoded)
+//         }
+
+//         console.log('ERROR')
+//         bot.start((ctx) => ctx.reply('Welcome'))
+//         bot.hears('hi', (ctx) => ctx.reply('Hey there'))
+
+//         return bot.handleUpdate(req.body, res)
+//     })

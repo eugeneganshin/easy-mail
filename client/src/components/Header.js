@@ -37,10 +37,11 @@ class Header extends Component {
 
   telegramLink() {
     if (this.props.url) {
+      console.log(this.props.url, 'TELEGRAMURL')
       return (
         <li key='1'>
           <div>
-            <a target="_blank" href={`https://t.me/easy_mail_bot?start=${this.props.url}`}>Telegram bot!</a>
+            <a target="_blank" href={`https://t.me/easymailbot?start=${this.props.url}`}>Telegram bot!</a>
           </div>
         </li>
 

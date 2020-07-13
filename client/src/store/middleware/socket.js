@@ -12,7 +12,7 @@ const reducer = (state = INITIAL_STATE, action) => {
             const updatedState = produce(state, (draft) => {
                 draft['data'] = action.payload
             })
-            console.log(action)
+            console.log(action, 'MIDLEWARE')
             return updatedState
 
         default:
