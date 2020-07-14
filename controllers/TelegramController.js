@@ -5,33 +5,33 @@ const Survey = mongoose.model("surveys");
 const Users = mongoose.model('Users')
 const keys = require('../config/keys')
 
+// NOTES:
+// Remove deeplink from frontend as soon as we have user_chat_id in model
+
 class TelegramController {
     constructor(bot, io) {
         this.bot = bot
         this.io = io
     }
 
+    // query for start
     handleDeepLink = async (req, res, next) => {
-        // check the string for secret_key
 
+        // query for /start and hash
         if (req.body.message.text.startsWith('/start')) {
-            console.log(req.body.message.text)
-
-            this.#analyseLink(req.body.message.text)
-
-            // const message = req.body.message.text
-            // const hash = message.split(' ')[1]
-            // const decoded = await this.#base64urlDecode(hash)
-            // const userId = decoded.split('=')[1]
-
-            // const user = await Users.findById(userId)
-
-            // // TODO: record telegram_chat_id for the user.
-            // // console.log(user)
+            // if start and hash, and hash matches KEYS
+            // record user_chat_id to the model
+            // start scene as logged in user
             // req['user'] = user
+
+            const c = await this.#analyseLink(req.body.message.text)
+            console.log(c)
 
             next()
         }
+
+        // any query
+        // check if incomming user has user_chat_id
 
         next()
 
@@ -67,11 +67,16 @@ class TelegramController {
     }
 
     #analyseLink = async (link) => {
+        // YXJhbmRvbXRlbGVncmFtc3RyaW5nPTVlZjBkNjYzN2YwZWEwMWEzYzgzZmM4Yw
         console.log(link)
-        return
-        // const link = message.split(' ')[1]
-        // const decoded = await this.#base64urlDecode(hash)
-        // const userId = decoded.split('=')[1]
+        const hash = link.split(' ')[1]
+        const decoded = await this.#base64urlDecode(hash)
+        const secret = decoded.split('=')[0]
+        if (secret.trim() === keys.TELEGRAM_SECRET_DEEP_LINK) {
+            return true
+        }
+
+        return false
     }
 
     #base64urlEncode = async (string, id) => {
