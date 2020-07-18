@@ -9,6 +9,7 @@ class SocketioController {
     }
 
     emitTelegramURL = async (req, res, next) => {
+        console.log(req.user)
         // The best thing would be to generate the key with memcashe
         if (!req.user) {
             await this.io.emit('action', { type: 'SOCKET_SERVER: NOT_LOGGED_IN', payload: null })
@@ -17,15 +18,15 @@ class SocketioController {
 
         await this.io.emit('action', {
             type: 'SOCKET_SERVER: LOGGED_IN',
-            payload: this.#base64urlEncode(keys.TELEGRAM_SECRET_DEEP_LINK, req.user._id)
+            payload: this.#base64urlEncode(req.user.telegramSecret)
         })
 
         return
     }
 
 
-    #base64urlEncode = (string, id) => {
-        return base64url(`${string}=${id}`)
+    #base64urlEncode = (string) => {
+        return base64url(`${string}`)
     }
 }
 

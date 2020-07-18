@@ -20,12 +20,17 @@ export const submitSurvey = (values, history) => {
   };
 };
 
+// TODO: fix the issue with /surveys if not logged in
 export const fetchSurveys = () => {
-  return async (dispatch) => {
-    const res = await axios.get("/api/surveys");
-    dispatch({
-      type: actionTypes.FETCH_SURVEYS,
-      payload: res.data,
-    });
-  };
+  try {
+    return async (dispatch) => {
+      const res = await axios.get("/api/surveys");
+      dispatch({
+        type: actionTypes.FETCH_SURVEYS,
+        payload: res.data,
+      });
+    };
+  } catch (error) {
+    console.log(error)
+  }
 };

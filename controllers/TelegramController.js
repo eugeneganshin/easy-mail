@@ -15,35 +15,34 @@ class TelegramController {
     }
 
     // query for start
-    handleDeepLink = async (req, res, next) => {
+    onStart = async (req, res, next) => {
+        const link = req.body.message.text
 
-        // query for /start and hash
         if (req.body.message.text.startsWith('/start')) {
-            // if start and hash, and hash matches KEYS
-            // record user_chat_id to the model
-            // start scene as logged in user
-            // req['user'] = user
+            const code = this.#extractUniqueCode(link)
+            const decoded = await this.#base64urlDecode(code)
+            const user = await this.#getUser(decoded)
 
-            const c = await this.#analyseLink(req.body.message.text)
-            console.log(c)
+            // ? safe user to req.user or not ?
+            if (user !== null) {
+                const found = await Users.findByIdAndUpdate({ _id: user._id }, { telegramChatId: chatId })
+                console.log(found, 'IF')
+                return next()
+            }
 
             next()
         }
-
-        // any query
-        // check if incomming user has user_chat_id
 
         next()
 
     }
 
     isLoggedIn = async (req, res, next) => {
-        //check req.user or telegram_chat_id
-        next()
-    }
+        const chatId = req.body.message.chat.id
 
-    startBot = async (req, res) => {
-        if (req.user) {
+        const user = await Users.findOne({ telegramChatId: chatId })
+
+        if (user !== null) {
             return this.#startBotWithUser(req, res)
         }
 
@@ -55,6 +54,7 @@ class TelegramController {
         res.status(200)
         this.bot.start((ctx) => ctx.reply('Welcome USER'))
         this.bot.hears('hi', (ctx) => ctx.reply('Hey there'))
+        this.bot.hears('a', (ctx) => ctx.reply('Hey there'))
         return this.bot.handleUpdate(req.body, res)
     }
 
@@ -63,20 +63,29 @@ class TelegramController {
         res.status(200)
         this.bot.start((ctx) => ctx.reply('Welcome'))
         this.bot.hears('hi', (ctx) => ctx.reply('Hey there'))
+        this.bot.hears('a', (ctx) => ctx.reply('Hey there'))
         return this.bot.handleUpdate(req.body, res)
     }
 
-    #analyseLink = async (link) => {
-        // YXJhbmRvbXRlbGVncmFtc3RyaW5nPTVlZjBkNjYzN2YwZWEwMWEzYzgzZmM4Yw
-        console.log(link)
-        const hash = link.split(' ')[1]
-        const decoded = await this.#base64urlDecode(hash)
-        const secret = decoded.split('=')[0]
-        if (secret.trim() === keys.TELEGRAM_SECRET_DEEP_LINK) {
-            return true
+    #extractUniqueCode = (link) => {
+        if (link.split(' ').length > 1) {
+            return link.split(' ')[1]
         }
 
-        return false
+        return null
+    }
+
+    #getUser = async (secret) => {
+        const user = await Users.findOne({ telegramSecret: secret }, function (err) {
+            console.error(err, 'getUser ERROR')
+            return null
+        })
+
+        if (user !== null) {
+            return user
+        } else {
+            return null
+        }
     }
 
     #base64urlEncode = async (string, id) => {
@@ -84,6 +93,7 @@ class TelegramController {
     }
 
     #base64urlDecode = async (string) => {
+        if (string === null) return null
         return await base64url.decode(string)
     }
 }

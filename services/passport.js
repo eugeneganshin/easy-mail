@@ -1,4 +1,5 @@
 const passport = require("passport");
+const crypto = require('crypto')
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const mongoose = require("mongoose");
 
@@ -31,7 +32,10 @@ passport.use(
         return done(null, currentUser);
       }
 
-      const user = await new User({ googleId: profile.id }).save();
+      // generate random secret string
+      const secret = await crypto.randomBytes(20).toString('hex')
+
+      const user = await new User({ googleId: profile.id, telegramSecret: secret }).save();
       done(null, user);
     }
   )
