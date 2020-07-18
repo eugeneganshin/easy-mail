@@ -15,7 +15,7 @@ class TelegramController {
     }
 
     // query for start
-    onStart = async (req, res, next) => {
+    handleReq = async (req, res, next) => {
         const link = req.body.message.text
 
         if (req.body.message.text.startsWith('/start')) {
@@ -23,10 +23,11 @@ class TelegramController {
             const decoded = await this.#base64urlDecode(code)
             const user = await this.#getUser(decoded)
 
+            console.log(user, 'handleReq')
             // ? safe user to req.user or not ?
             if (user !== null) {
-                const found = await Users.findByIdAndUpdate({ _id: user._id }, { telegramChatId: chatId })
-                console.log(found, 'IF')
+                await Users.findByIdAndUpdate({ _id: user._id }, { telegramChatId: chatId })
+
                 return next()
             }
 
@@ -37,11 +38,12 @@ class TelegramController {
 
     }
 
-    isLoggedIn = async (req, res, next) => {
+    start = async (req, res, next) => {
         const chatId = req.body.message.chat.id
 
+        console.log(chatId, 'start')
         const user = await Users.findOne({ telegramChatId: chatId })
-
+        console.log(user)
         if (user !== null) {
             return this.#startBotWithUser(req, res)
         }
@@ -50,18 +52,20 @@ class TelegramController {
     }
 
     #startBotWithUser = async (req, res) => {
-        console.log(req.user, 'WITH USER')
+        console.log('WITH USER')
         res.status(200)
         this.bot.start((ctx) => ctx.reply('Welcome USER'))
+        this.bot.on('text', (ctx) => ctx.reply('Hello World'))
         this.bot.hears('hi', (ctx) => ctx.reply('Hey there'))
         this.bot.hears('a', (ctx) => ctx.reply('Hey there'))
         return this.bot.handleUpdate(req.body, res)
     }
 
     #startBotNoUser = async (req, res) => {
-        console.log(req.user, 'WITHOUT USER')
+        console.log('WITHOUT USER')
         res.status(200)
         this.bot.start((ctx) => ctx.reply('Welcome'))
+        this.bot.on('text', (ctx) => ctx.reply('Hello World'))
         this.bot.hears('hi', (ctx) => ctx.reply('Hey there'))
         this.bot.hears('a', (ctx) => ctx.reply('Hey there'))
         return this.bot.handleUpdate(req.body, res)

@@ -89,7 +89,7 @@ const createRoutes = (app, io, bot) => {
     app.get('/api/surveys/:id/:choice', (req, res) => { res.send("Thanks for voting!") })
 
     // TELEGRAM LOGIC
-    app.post('/telegram', TelegramC.onStart, TelegramC.isLoggedIn)
+    app.post('/telegram', TelegramC.handleReq, TelegramC.start)
 
     // app.post('/telegram', (req, res) => {
     //     // if (req.body.message.text.startsWith('/start')) {
