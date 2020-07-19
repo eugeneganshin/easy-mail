@@ -18,33 +18,40 @@ class TelegramController {
 
     // query for start
     handleReq = async (req, res, next) => {
-        const link = req.body.message.text
-        const chatId = req.body.message.chat.id
-        console.log(req.body)
+        if (req.body.callback_query) return next()
 
         if (req.body.message.text.startsWith('/start')) {
+            const link = req.body.message.text
+            const chatId = req.body.message.from.id
+
             const code = this.#extractUniqueCode(link)
             const decoded = await this.#base64urlDecode(code)
             const user = await this.#getUser(decoded)
 
-            console.log(user, 'handleReq')
+            // console.log(user, 'handleReq')
             // ? safe user to req.user or not ?
             if (user !== null) {
                 const updatedUser = await Users.findByIdAndUpdate({ _id: user._id }, { telegramChatId: chatId })
                 return next()
             }
 
-            next()
+            return next()
         }
 
-        next()
+        return next()
 
     }
 
     isLoggedIn = async (req, res, next) => {
-        const chatId = req.body.message.chat.id
+        let chatId
+        if (req.body.callback_query) {
+            chatId = req.body.callback_query.from.id
+        } else {
+            chatId = req.body.message.from.id
+        }
 
         const user = await Users.findOne({ telegramChatId: chatId })
+
 
         if (user) {
             console.log('WITH USER')
@@ -57,6 +64,7 @@ class TelegramController {
         return this.bot.handleUpdate(req.body, res)
     }
 
+    // IF this function is not first get bug
     start = async (req, res, next) => {
         /**
          * MENU STRUCTURE
@@ -64,6 +72,7 @@ class TelegramController {
          * [INFO], [HELP], [SHOW MY SURVEYS], [CREATE NEW SURVEY], [VISIT WEBPAGE]
          */
         // const { user } = req
+
 
         const menuTemplate = new MenuTemplate(ctx => `MENU\n`)
 
@@ -77,6 +86,7 @@ class TelegramController {
 
 
         this.bot.use(menuMiddleware)
+        // console.log(req.body.callback_query)
         return this.bot.handleUpdate(req.body, res)
     }
 
@@ -166,23 +176,3 @@ class TelegramController {
 }
 
 module.exports = TelegramController
-
-
-// testing = async (req, res) => {
-//     /**
-//      * MENU STRUCTURE
-//      * 
-//      * [INFO], [HELP], [SHOW MY SURVEYS], [CREATE NEW SURVEY], [VISIT WEBPAGE]
-//      */
-//     const menuTemplate = new MenuTemplate(ctx => `Hey user!`)
-
-//     this.#infoMenu(menuTemplate)
-//     this.#helpMenu(menuTemplate)
-//     this.#surveysMenu(menuTemplate)
-
-//     const menuMiddleware = new MenuMiddleware('/', menuTemplate)
-//     this.bot.command('menu', ctx => menuMiddleware.replyToContext(ctx))
-//     this.bot.use(menuMiddleware)
-
-//     return this.bot.handleUpdate(req.body, res)
-// }
