@@ -4,8 +4,13 @@ const keys = require('../config/keys')
 
 const bot = new Telegraf(keys.TELEGRAM_TOKEN)
 
+
 // TG WEBHOOK
-bot.telegram.setWebhook('https://ece0a3f4ed1a.ngrok.io/telegram')
+bot.telegram.setWebhook('https://10357c3eb8b5.ngrok.io/telegram')
+
+
+
+
 module.exports = bot
 
 // https://t.me/mybot?start=parameter deep link in frontend

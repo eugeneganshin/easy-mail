@@ -11,11 +11,11 @@ class SurveyController {
     }
 
     getSurvey = async (req, res, next) => {
-
         const surveys = await Survey.find({ _user: req.user.id })
             .populate("_user")
             .select("-recipients");
 
+        console.log(surveys)
         res.send(surveys);
         next()
     }

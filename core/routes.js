@@ -89,7 +89,8 @@ const createRoutes = (app, io, bot) => {
     app.get('/api/surveys/:id/:choice', (req, res) => { res.send("Thanks for voting!") })
 
     // TELEGRAM LOGIC
-    app.post('/telegram', TelegramC.handleReq, TelegramC.start)
+    // app.post('/telegram', TelegramC.handleReq, TelegramC.isLoggedIn, TelegramC.start)
+    app.post('/telegram', TelegramC.start)
 
     // app.post('/telegram', (req, res) => {
     //     // if (req.body.message.text.startsWith('/start')) {
@@ -98,9 +99,10 @@ const createRoutes = (app, io, bot) => {
     //     //     const decoded = TelegramC.decodeLink(hash)
     //     //     console.log(decoded)
     //     // }
-    //     console.log(typeof (req.body.message.chat.id))
+
     //     console.log('ERROR')
     //     bot.start((ctx) => ctx.reply('Welcome'))
+    //     bot.on('text', ctx => ctx.reply('text'))
     //     bot.hears('hi', (ctx) => ctx.reply('Hey there'))
     //     bot.hears('a', (ctx) => ctx.reply('Hey there'))
 
