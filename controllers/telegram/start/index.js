@@ -12,12 +12,13 @@ const { leave } = Stage
 const start = new Scene('start')
 
 start.enter(async (ctx) => {
-    const uid = String(ctx.from.id)
+    console.log(ctx.startPayload)
+    const userid = String(ctx.from.id)
     const decoded = await base64url.decode(ctx.startPayload)
-    const user = await Users.findOne({ telegramSecret: decoded })
+    const user = await Users.findOneAndUpdate({ telegramSecret: decoded }, { telegramChatId: userid })
 
     const { mainKeyboard } = getKeyboards.getMainKeyboard()
-    console.log(mainKeyboard)
+
 
     if (user) {
         await ctx.reply(`Hey! First of all, thanks for activating me!\n\nThe bot can do anything the website can do, so check it out!`)

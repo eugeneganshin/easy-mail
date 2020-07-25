@@ -5,8 +5,12 @@ const Stage = require('telegraf/stage')
 const Scene = require('telegraf/scenes/base')
 
 const keys = require('../config/keys')
+
 const startScene = require('../controllers/telegram/start')
 const aboutScene = require('../controllers/telegram/about')
+const unauthorizedScene = require('../controllers/telegram/unauthorized')
+
+const isLoggedin = require('../middleware/telegram/isLoggedin')
 const asyncWrapper = require('../util/errorHandler')
 
 const { leave } = Stage
@@ -14,12 +18,18 @@ const { leave } = Stage
 const stage = new Stage()
 
 stage.command('cancel', leave())
+stage.register(unauthorizedScene)
 stage.register(startScene)
 
 const bot = new Telegraf(keys.TELEGRAM_TOKEN)
 
 bot.use(session())
 bot.use(stage.middleware())
+// bot.use(isLoggedin)
+// bot.use(async (ctx, next) => {
+//     console.log('middleware')
+//     await next()
+// })
 
 bot.start(asyncWrapper(async (ctx) => ctx.scene.enter('start')))
 
