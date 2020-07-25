@@ -1,15 +1,26 @@
 const { Telegraf } = require('telegraf')
 const { MenuTemplate, MenuMiddleware, createBackMainMenuButtons } = require('telegraf-inline-menu')
+const session = require('telegraf/session')
+const Stage = require('telegraf/stage')
+const Scene = require('telegraf/scenes/base')
+
 const keys = require('../config/keys')
+const startScene = require('../controllers/telegram/start')
+const aboutScene = require('../controllers/telegram/about')
+const { leave } = Stage
+
+const stage = new Stage()
+// stage.command('cancel', leave())
+stage.register(startScene)
+stage.command('cancel', leave())
 
 const bot = new Telegraf(keys.TELEGRAM_TOKEN)
 
+bot.use(session())
+bot.use(stage.middleware())
 
-// TG WEBHOOK
-bot.telegram.setWebhook('https://10357c3eb8b5.ngrok.io/telegram')
-
-
-
+bot.start(async (ctx) => await ctx.scene.enter('start'))
+bot.on('message', ctx => ctx.reply('HY'))
 
 module.exports = bot
 

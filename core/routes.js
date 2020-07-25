@@ -3,6 +3,7 @@ const express = require('express')
 const passport = require('passport')
 const cors = require('cors')
 const cookieSession = require('cookie-session')
+const session = require('telegraf/session')
 
 const keys = require('../config/keys')
 const stripe = require('stripe')(keys.STRIPE_SECRET_KEY)
@@ -89,8 +90,8 @@ const createRoutes = (app, io, bot) => {
     app.get('/api/surveys/:id/:choice', (req, res) => { res.send("Thanks for voting!") })
 
     // TELEGRAM LOGIC
-    app.post('/telegram', TelegramC.handleReq, TelegramC.isLoggedIn, TelegramC.start)
-    // app.post('/telegram', TelegramC.start)
+    // app.post('/telegram', TelegramC.deeplink, TelegramC.handleReq, TelegramC.isLoggedIn, TelegramC.start)
+    app.post('/telegram', TelegramC.testing)
 
     // app.post('/telegram', (req, res) => {
     //     // if (req.body.message.text.startsWith('/start')) {
@@ -108,8 +109,9 @@ const createRoutes = (app, io, bot) => {
 
     //     return bot.handleUpdate(req.body, res)
     // })
-
     app.use(bot.webhookCallback('/telegram'))
+    bot.telegram.setWebhook('https://176f1bec2446.ngrok.io/telegram')
+    // bot.handleUpdate(req.body, res)
 }
 
 module.exports = createRoutes
