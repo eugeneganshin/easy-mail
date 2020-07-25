@@ -63,14 +63,6 @@ const createRoutes = (app, io, bot) => {
         res.send(user)
     })
 
-    // TG (deprecated)
-    // app.get('/telegram', (req, res) => {
-    //     console.log(req.user)
-
-    //     res.redirect('https://t.me/easy_mail_bot')
-    // })
-
-
     // PASSPORT ROUTES
     app.get('/auth/google', passport.authenticate('google', {
         scope: ['profile', 'email'],
@@ -93,43 +85,8 @@ const createRoutes = (app, io, bot) => {
     // app.post('/telegram', TelegramC.deeplink, TelegramC.handleReq, TelegramC.isLoggedIn, TelegramC.start)
     app.post('/telegram', TelegramC.testing)
 
-    // app.post('/telegram', (req, res) => {
-    //     // if (req.body.message.text.startsWith('/start')) {
-    //     //     const hash = req.body.message.text.split(' ')[1]
-
-    //     //     const decoded = TelegramC.decodeLink(hash)
-    //     //     console.log(decoded)
-    //     // }
-
-    //     console.log('ERROR')
-    //     bot.start((ctx) => ctx.reply('Welcome'))
-    //     bot.on('text', ctx => ctx.reply('text'))
-    //     bot.hears('hi', (ctx) => ctx.reply('Hey there'))
-    //     bot.hears('a', (ctx) => ctx.reply('Hey there'))
-
-    //     return bot.handleUpdate(req.body, res)
-    // })
     app.use(bot.webhookCallback('/telegram'))
-    bot.telegram.setWebhook('https://176f1bec2446.ngrok.io/telegram')
-    // bot.handleUpdate(req.body, res)
+    bot.telegram.setWebhook('https://76d53e63ef5b.ngrok.io/telegram')
 }
 
 module.exports = createRoutes
-
-
-
-// TelegramC = new TelegramController(bot, io)
-//     app.post('/telegram', (req, res) => {
-//         if (req.body.message.text.startsWith('/start')) {
-//             const hash = req.body.message.text.split(' ')[1]
-
-//             const decoded = TelegramC.decodeLink(hash)
-//             console.log(decoded)
-//         }
-
-//         console.log('ERROR')
-//         bot.start((ctx) => ctx.reply('Welcome'))
-//         bot.hears('hi', (ctx) => ctx.reply('Hey there'))
-
-//         return bot.handleUpdate(req.body, res)
-//     })

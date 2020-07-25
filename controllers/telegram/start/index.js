@@ -20,17 +20,28 @@ start.enter(async (ctx) => {
     console.log(mainKeyboard)
 
     if (user) {
-        await ctx.reply(`Hey! First of all, thanks for activating me!\n\nThe bot can do anything the website can do, so check it out!`, Extra.markup(
-            Markup.keyboard(['Coke', 'Pepsi'])
-        ))
+        await ctx.reply(`Hey! First of all, thanks for activating me!\n\nThe bot can do anything the website can do, so check it out!`)
     } else {
-        await ctx.reply(`Hey! I don't know you. Visit our website first!\n\nhttps://easymail.com`)
+        await ctx.reply(`Hey! I don't know you. Visit our website first!\n\nhttps://easymail.com`, Extra.HTML().markup((m) =>
+            m.inlineKeyboard([
+                m.callbackButton('Coke', 'Coke'),
+                m.callbackButton('Pepsi', 'Pepsi')
+            ])))
     }
 })
 
 start.leave((ctx) => ctx.reply('Bye'))
-
 start.hears(/hi/gi, leave())
-start.on('message', (ctx) => ctx.reply('Send `hi`'))
+
+
+start.action(/coke/gi, ctx => {
+    ctx.answerCbQuery()
+    ctx.reply('Coke')
+})
+
+start.action(/pepsi/gi, ctx => {
+    ctx.answerCbQuery()
+    ctx.reply('Pepsi')
+})
 
 module.exports = start
