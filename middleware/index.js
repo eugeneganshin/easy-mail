@@ -11,6 +11,7 @@ const isLoggedin = async (ctx, next) => {
     const user = await User.findOne({ telegramChatId: uid })
     const newUser = await User.findOneAndUpdate({ telegramSecret: decoded }, { telegramChatId: uid })
 
+    console.log(ctx)
     if (newUser) {
         ctx.session['user'] = newUser
         return next(ctx)
