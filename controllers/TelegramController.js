@@ -20,7 +20,8 @@ class TelegramController {
     }
 
     testing = (req, res) => {
-
+        console.log(req.body.message.text)
+        res.status(200)
         this.bot.handleUpdate(req.body, res)
     }
     // bot.start((ctx) => ctx.reply(`Deep link payload: ${ctx.startPayload}`))

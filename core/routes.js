@@ -86,7 +86,7 @@ const createRoutes = (app, io, bot) => {
     app.post('/telegram', TelegramC.testing)
 
     app.use(bot.webhookCallback('/telegram'))
-    bot.telegram.setWebhook('https://76d53e63ef5b.ngrok.io/telegram')
+    bot.telegram.setWebhook('https://c92beca16db6.ngrok.io/telegram')
 }
 
 module.exports = createRoutes
