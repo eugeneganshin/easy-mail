@@ -4,6 +4,8 @@ const Extra = require('telegraf/extra')
 const Markup = require('telegraf/markup')
 const mongoose = require('mongoose')
 
+const { backKeyboard, mainKeyboard } = require('../../../util/keyboard')
+
 const User = mongoose.model('Users')
 
 const { leave } = Stage
@@ -17,15 +19,15 @@ main.enter(async (ctx) => {
     if (!ctx.session.user && !user) {
         return await ctx.scene.enter('unauthorizedScene')
     }
-    // [INFO], [HELP], [SHOW MY SURVEYS], [CREATE NEW SURVEY], [VISIT WEBPAGE]
-    await ctx.reply('Main Scene' + ctx.from.id)
+
+    await ctx.reply('<b>Coke</b> or <i>Pepsi?</i>')
 })
 
-main.leave(async (ctx) => {
-    console.log('MAIN SCENE: LEAVE')
-    return
-})
+main.leave(ctx => ctx.reply('leaving main scene'))
+
+main.command('saveme', leave())
 main.hears(/bye/gi, leave())
-main.on('message', ctx => ctx.reply('say bye'))
+
+// actions
 
 module.exports = main

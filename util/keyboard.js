@@ -1,36 +1,27 @@
 const Markup = require('telegraf/markup')
+const { Extra } = require('telegraf')
 
-exports.getBackKeyBoard = () => {
-    const backKeyboardBack = '◀️ Back'
-    const backKeyBoard = Markup.keyboard([backKeyboardBack]).resize().extra()
+exports.backKeyboard = Markup.keyboard(['◀️ BACK']).resize().extra()
 
-    return {
-        backKeyBoard,
-        backKeyboardBack
-    }
-}
+exports.mainKeyboard = Extra.HTML().markup((m) =>
+    m.inlineKeyboard(
+        [
+            [
+                m.callbackButton('INFO', 'INFO'),
+                m.callbackButton('HELP', 'HELP')
+            ],
+            [
+                m.callbackButton('SHOW MY SURVEYS', 'SURVEYS'),
+                m.callbackButton('CREATE NEW SURVEY', 'NEW_SURVEY')
+            ],
+            [
+                { text: 'VISIT WEBSITE', callback_data: 'URL', url: 'https://easymail.com' }
+            ]
+        ]
+    ))
 
-exports.getMainKeyboard = () => {
-    const mainKeyboardInfo = 'Info'
-    const mainKeyboardHelp = 'Help'
-    const mainKeyboardSurveys = 'Surveys'
-    const mainkeyboardNewSurvey = 'Create New Survey'
-    const mainkeyboardVisitWebpage = 'Visit webpage'
-
-    let mainKeyboard = Markup.keyboard([
-        [mainKeyboardInfo, mainKeyboardHelp],
-        [mainKeyboardSurveys, mainkeyboardNewSurvey],
-        [mainkeyboardVisitWebpage]
-    ])
-
-    mainKeyboard.resize().extra()
-
-    return {
-        mainKeyboard,
-        mainKeyboardInfo,
-        mainKeyboardHelp,
-        mainKeyboardSurveys,
-        mainkeyboardNewSurvey,
-        mainkeyboardVisitWebpage
-    }
-}
+exports.testKeyboard = Markup.keyboard([
+    ['❓ ABOUT', '👀 HELP'],
+    ['📎 SHOW MY SURVEYS', '📝 CREATE NEW SURVEY'],
+    ['VISIT WEBSITE']
+]).resize().extra()

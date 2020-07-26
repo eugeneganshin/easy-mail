@@ -4,24 +4,23 @@ const Scene = require('telegraf/scenes/base')
 const { backKeyboard, testKeyboard } = require('../../../util/keyboard')
 
 const replies = {
-    enter: 'A small SPA application to make emails and send them via SendGrid.',
+    enter: 'ENTERING HELP SCENE',
     leave: `✋ Hey, what are you up to?`
 }
 
 const { leave } = Stage
-const about = new Scene('aboutScene')
+const help = new Scene('helpScene')
 
-about.enter(async (ctx) => {
+help.enter(async (ctx) => {
     await ctx.reply(replies.enter, backKeyboard)
 })
 
-about.leave(async (ctx) => {
+help.leave(async (ctx) => {
     await ctx.reply(replies.leave, testKeyboard)
 })
 
 // command,hears,action
-about.command('back', leave())
-about.hears('◀️ BACK', leave())
-about.action('saveme', leave())
+help.action('saveme', leave())
+help.hears(/back/gi, leave())
 
-module.exports = about
+module.exports = help
