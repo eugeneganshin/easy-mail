@@ -1,26 +1,28 @@
 const Stage = require('telegraf/stage')
 const Scene = require('telegraf/scenes/base')
 
-const { backKeyboard, testKeyboard } = require('../../../util/keyboard')
+const locales = require('../../../locales/en')
+const { backKeyboard, mainKeyboard } = require('../../../util/keyboard')
+const question = require('./middleware')
 
-const replies = {
-    enter: 'ENTERING HELP NEW SURVEY SCENE',
-    leave: `✋ Hey, what are you up to?`
-}
+const { scenes, shared, keyboards, other } = locales()
 
 const { leave } = Stage
 const newSurvey = new Scene('newSurveyScene')
 
-newSurvey.enter(async (ctx) => {
-    await ctx.reply(replies.enter, backKeyboard)
+newSurvey.enter(question, async (ctx) => {
+    await ctx.reply(scenes.new_survey.test, backKeyboard)
+    await ctx.question('HEY')
 })
 
+
+
 newSurvey.leave(async (ctx) => {
-    await ctx.reply(replies.leave, testKeyboard)
+    await ctx.reply(shared.what_next, mainKeyboard)
 })
 
 // command,hears,action
+newSurvey.hears(keyboards.back_keyboard.back, leave())
 newSurvey.action('saveme', leave())
-newSurvey.hears(/back/gi, leave())
 
 module.exports = newSurvey

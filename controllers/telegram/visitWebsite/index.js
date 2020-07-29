@@ -1,38 +1,26 @@
 const Stage = require('telegraf/stage')
 const Scene = require('telegraf/scenes/base')
 
-const { backKeyboard, testKeyboard } = require('../../../util/keyboard')
+const { backKeyboard, mainKeyboard } = require('../../../util/keyboard')
+const locales = require('../../../locales/en')
 
-const replies = {
-    enter: 'Official site',
-    leave: `✋ Hey, what are you up to?`,
-    website: {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    { text: 'easymail', url: 'https://easymail.com' }
-                ]
-            ]
-        }
-    },
-    sticker: 'CAACAgEAAxkBAAIH1l8d70PLrLrGBDryPUZrFf1K0UyUAAKxCAACv4yQBGXO3y8nkM42GgQ'
-}
+const { scenes, shared, keyboards, other } = locales()
 
 const { leave } = Stage
 const visitScene = new Scene('visitWebsiteScene')
 
 visitScene.enter(async (ctx) => {
-    await ctx.reply(replies.enter, replies.website)
-    await ctx.replyWithSticker(replies.sticker, backKeyboard)
+    await ctx.reply(scenes.visit_website.message, scenes.visit_website.button)
+    await ctx.replyWithSticker(scenes.visit_website.sticker, backKeyboard)
 })
 
 visitScene.leave(async (ctx) => {
-    await ctx.reply(replies.leave, testKeyboard)
+    await ctx.reply(shared.what_next, mainKeyboard)
 })
 
 // command,hears,action
 visitScene.command('back', leave())
-visitScene.hears('◀️ BACK', leave())
+visitScene.hears(keyboards.back_keyboard.back, leave())
 visitScene.action('saveme', leave())
 
 module.exports = visitScene

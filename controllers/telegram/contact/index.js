@@ -7,19 +7,18 @@ const { backKeyboard, mainKeyboard } = require('../../../util/keyboard')
 const { scenes, shared, keyboards, other } = locales()
 
 const { leave } = Stage
-const about = new Scene('aboutScene')
+const contact = new Scene('contactScene')
 
-about.enter(async (ctx) => {
-    await ctx.reply(scenes.about.enter, backKeyboard)
+contact.enter(async (ctx) => {
+    await ctx.reply(scenes.contact.write_to_the_creator, backKeyboard)
 })
 
-about.leave(async (ctx) => {
+contact.leave(async (ctx) => {
     await ctx.reply(shared.what_next, mainKeyboard)
 })
 
 // command,hears,action
-about.command('back', leave())
-about.hears(keyboards.back_keyboard.back, leave())
-about.action('saveme', leave())
+contact.action('saveme', leave())
+contact.hears(keyboards.back_keyboard.back, leave())
 
-module.exports = about
+module.exports = contact
