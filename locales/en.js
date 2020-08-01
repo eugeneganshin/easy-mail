@@ -18,7 +18,44 @@ const locales = () => {
             test: 'ENTER SURVEYS SCENE'
         },
         new_survey: {
-            test: 'ENTER NEW SURVEY SCENE'
+            message: `I will help you with creating new surveys. Please press the button to start.`,
+            additional_message: 'You will be able to start again if the survey is wrong.',
+            buton: {
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: 'Create new survey', callback_data: 'create-new-survey' }
+                        ]
+                    ]
+                }
+            },
+            backButton: {
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: 'Back', callback_data: 'back' }
+                        ]
+                    ]
+                }
+            },
+            resultButtons: {
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: 'Yes', callback_data: 'yes' },
+                            { text: 'No', callback_data: 'no' }
+                        ]
+                    ]
+                }
+            },
+            cbQueryNew: 'create-new-survey',
+            cbQueryBack: 'back',
+            title: 'Enter a title of the mail',
+            subject: 'Enter a subject of the mail',
+            body: 'Enter a body of the mail',
+            recipients: 'Enter a list of recipients.\nExample: johndoe@gmail.com, janedoe@yahoo.com, etc.',
+            choice: 'Happy with the result?',
+            test: 'ENTER NEW SURVEY SCENE',
         },
         visit_website: {
             message: 'Official site',
@@ -37,7 +74,8 @@ const locales = () => {
 
     const shared = {
         what_next: "✋ Hey, what are you up to?",
-        something_went_wrong: "❌ Something went wrong. Try one more time.."
+        something_went_wrong: "❌ Something went wrong. Try one more time..",
+        sticker: 'CAACAgEAAxkBAAIH1l8d70PLrLrGBDryPUZrFf1K0UyUAAKxCAACv4yQBGXO3y8nkM42GgQ'
     }
 
     const keyboards = {

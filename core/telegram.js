@@ -18,29 +18,28 @@ const { shared, keyboards, other } = locales()
 
 const { leave } = Stage
 
-const stage = new Stage()
+const stage = new Stage([aboutScene, contactScene, surveysScene, newSurveyScene, visitWebsiteScene])
 stage.command('cancel', leave())
-
-
-stage.register(aboutScene)
-stage.register(contactScene)
-stage.register(surveysScene)
-stage.register(newSurveyScene)
-stage.register(visitWebsiteScene)
 
 const bot = new Telegraf(keys.TELEGRAM_TOKEN)
 
 bot.use(session())
 bot.use(stage.middleware())
 
-bot.command('saveme', async (ctx) => await ctx.reply(shared.what_next, mainKeyboard))
+bot.command('saveme', asyncWrapper(async (ctx) => await ctx.reply(shared.what_next, mainKeyboard)))
+bot.action('next', asyncWrapper(async (ctx) => {
+    await ctx.answerCbQuery()
+    await ctx.reply(other.default_handler, mainKeyboard)
+}))
+
 bot.start(telegramMiddleware.isLoggedin)
 
 bot.hears(keyboards.main_keyboard.about, asyncWrapper(async (ctx) => await ctx.scene.enter('aboutScene')))
 bot.hears(keyboards.main_keyboard.contact, asyncWrapper(async (ctx) => await ctx.scene.enter('contactScene')))
 bot.hears(keyboards.main_keyboard.surveys, asyncWrapper(async (ctx) => await ctx.scene.enter('surveyScene')))
-bot.hears(keyboards.main_keyboard.new_survey, asyncWrapper(async (ctx) => await ctx.scene.enter('newSurveyScene')))
+bot.hears(keyboards.main_keyboard.new_survey, asyncWrapper(async (ctx) => await ctx.scene.enter('newSurvey')))
 bot.hears(keyboards.main_keyboard.website, asyncWrapper(async (ctx) => await ctx.scene.enter('visitWebsiteScene')))
+bot.hears('super', asyncWrapper(async (ctx) => await ctx.scene.enter('super-wizard')))
 
 bot.hears(keyboards.back_keyboard.back, asyncWrapper(async (ctx) => ctx.reply(shared.what_next, mainKeyboard)))
 
