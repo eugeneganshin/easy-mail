@@ -1,15 +1,15 @@
 class CreditsController {
-  constructor(io) {
-    this.io = io
-  }
+	constructor(io) {
+		this.io = io;
+	}
 
-  isEnoughCredits = (req, res, next) => {
-    if (req.user.credits < 1) {
-      return res.status(401).send({ error: 'Not enough credits!' })
-    }
+	isEnoughCredits = (req, res, next) => {
+		if (req.user.credits < 1) {
+			return res.status(401).send({ error: 'Not enough credits!' });
+		}
 
-    next()
-  }
+		next();
+	};
 }
 
-module.exports = CreditsController
+module.exports = CreditsController;

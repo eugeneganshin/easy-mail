@@ -1,84 +1,82 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import tgLogo from '../logos/telegram.png'
-import * as actionCreators from '../store/actions/index'
-import Payments from './Payments'
+import tgLogo from '../logos/telegram.png';
+import * as actionCreators from '../store/actions/index';
+import Payments from './Payments';
 
 class Header extends Component {
-  renderContentHandler() {
-    switch (this.props.authenticated) {
-      case null:
-        return 'Still deciding'
-      case false:
-        return (
-          <li>
-            <a href="/auth/google">Login with Google</a>
-          </li>
-        )
-      default:
-        return (
-          <React.Fragment>
-            {this.telegramLink()}
-            <li key="2">
-              <Payments />
-            </li>
-            <li key="3" style={{ margin: '0 10px' }}>
-              Credits: <span>{this.props.authenticated.credits}</span>
-            </li>
-            <li key="4">
-              <a onClick={this.props.onLogout}>Logout</a>
-            </li>
-          </React.Fragment>
-        )
-    }
-  }
+	renderContentHandler() {
+		switch (this.props.authenticated) {
+			case null:
+				return 'Still deciding';
+			case false:
+				return (
+					<li>
+						<a href="/auth/google">Login with Google</a>
+					</li>
+				);
+			default:
+				return (
+					<React.Fragment>
+						{this.telegramLink()}
+						<li key="2">
+							<Payments />
+						</li>
+						<li key="3" style={{ margin: '0 10px' }}>
+							Credits: <span>{this.props.authenticated.credits}</span>
+						</li>
+						<li key="4">
+							<a onClick={this.props.onLogout}>Logout</a>
+						</li>
+					</React.Fragment>
+				);
+		}
+	}
 
-  telegramLink() {
-    if (this.props.url) {
-      console.log(this.props.url, 'TELEGRAMURL')
-      return (
-        <li key='1'>
-          <div>
-            <a target="_blank" href={`https://t.me/easymailbot?start=${this.props.url}`}>Telegram bot!</a>
-          </div>
-        </li>
+	telegramLink() {
+		if (this.props.url) {
+			console.log(this.props.url, 'TELEGRAMURL');
+			return (
+				<li key="1">
+					<div>
+						<a target="_blank" href={`https://t.me/easymailbot?start=${this.props.url}`}>
+							Telegram bot!
+						</a>
+					</div>
+				</li>
+			);
+		}
+		return null;
+	}
 
-      )
-    }
-    return null
-  }
-
-  render() {
-    console.log(this.props)
-    return (
-      <nav>
-        <div className="nav-wrapper">
-          <Link
-            to={this.props.authenticated ? '/surveys' : '/'}
-            className="brand-logo left"
-          >
-            Logo
-          </Link>
-          <ul className="right">{this.renderContentHandler()}</ul>
-        </div>
-      </nav>
-    )
-  }
+	render() {
+		console.log(this.props);
+		return (
+			<nav>
+				<div className="nav-wrapper">
+					<Link to={this.props.authenticated ? '/surveys' : '/'} className="brand-logo left">
+						Logo
+					</Link>
+					<ul className="right">{this.renderContentHandler()}</ul>
+				</div>
+			</nav>
+		);
+	}
 }
 
 const mapStateToProps = (state) => {
-  return {
-    authenticated: state.authenticated.authenticated,
-    url: state.socket.data
-  }
-}
+	return {
+		authenticated: state.authenticated.authenticated,
+		url: state.socket.data,
+	};
+};
 
 const mapdispatchtoprops = (dispatch) => {
-  return {
-    onLogout: () => dispatch(actionCreators.logoutUser()),
-  }
-}
+	return {
+		onLogout: () => dispatch(actionCreators.logoutUser()),
+	};
+};
 
-export default connect(mapStateToProps, mapdispatchtoprops)(Header)
+export default connect(mapStateToProps, mapdispatchtoprops)(Header);

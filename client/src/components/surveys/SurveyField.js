@@ -1,16 +1,16 @@
-import React from 'react'
-import { Field } from 'redux-form'
+import React from 'react';
+import { Field } from 'redux-form';
 
 const SurveyField = ({ input, label, meta: { error, touched } }) => {
-  return (
-    <div>
-      <label>{label}</label>
-      <input style={{ marginBottom: '5px' }} {...input} />
-      <div className="red-text" style={{ marginBottom: '20px' }}>
-        {touched && error}
-      </div>
-    </div>
-  )
-}
+	return (
+		<div>
+			<label>{label}</label>
+			<input style={{ marginBottom: '5px' }} {...input} />
+			<div className="red-text" style={{ marginBottom: '20px' }}>
+				{touched && error}
+			</div>
+		</div>
+	);
+};
 
-export default SurveyField
+export default SurveyField;
