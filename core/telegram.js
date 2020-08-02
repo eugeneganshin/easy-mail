@@ -2,15 +2,16 @@ const { Telegraf } = require('telegraf');
 const session = require('telegraf/session');
 const Stage = require('telegraf/stage');
 
+const {
+	aboutScene,
+	contactScene,
+	newSurveyScene,
+	surveysScene,
+	visitWebsiteScene,
+} = require('../controllers/telegram');
+const telegramMiddleware = require('../middleware');
 const keys = require('../config/keys');
 const locales = require('../locales/en');
-
-const telegramMiddleware = require('../middleware');
-const aboutScene = require('../controllers/telegram/about');
-const contactScene = require('../controllers/telegram/contact');
-const surveysScene = require('../controllers/telegram/surveys');
-const newSurveyScene = require('../controllers/telegram/newSurvey');
-const visitWebsiteScene = require('../controllers/telegram/visitWebsite');
 
 const asyncWrapper = require('../util/errorHandler');
 const { mainKeyboard } = require('../util/keyboard');
@@ -18,13 +19,7 @@ const { shared, keyboards, other } = locales();
 
 const { leave } = Stage;
 
-const stage = new Stage([
-	aboutScene,
-	contactScene,
-	surveysScene,
-	newSurveyScene,
-	visitWebsiteScene,
-]);
+const stage = new Stage([aboutScene, contactScene, surveysScene, newSurveyScene, visitWebsiteScene]);
 stage.command('cancel', leave());
 
 const bot = new Telegraf(keys.TELEGRAM_TOKEN);

@@ -3,30 +3,30 @@ const express = require('express');
 const passport = require('passport');
 const cors = require('cors');
 const cookieSession = require('cookie-session');
-const session = require('telegraf/session');
 
 const keys = require('../config/keys');
 const stripe = require('stripe')(keys.STRIPE_SECRET_KEY);
 
-const AuthController = require('../controllers/AuthController');
-const CreditsController = require('../controllers/CreditsController');
-const SurveyController = require('../controllers/SurveyController');
-const WebhookContoller = require('../controllers/WebhookContoller');
-const TelegramController = require('../controllers/TelegramController');
-const SocketioController = require('../controllers/SocketioController');
-
-// Controllers import
+const {
+	AuthController,
+	CreditsController,
+	SocketioController,
+	SurveyController,
+	TelegramController,
+	WebhookController,
+} = require('../controllers');
 
 const createRoutes = (app, io, bot) => {
 	// CONTROLLERS
-	AuthC = new AuthController(io);
-	CreditsC = new CreditsController(io);
-	SurveyC = new SurveyController(io, bot);
-	WebhookC = new WebhookContoller(io);
-	TelegramC = new TelegramController(bot, io);
-	SocketioC = new SocketioController(bot, io);
+	AuthC = new AuthController();
+	CreditsC = new CreditsController(stripe);
+	SurveyC = new SurveyController();
+	TelegramC = new TelegramController(bot);
+	WebhookC = new WebhookController(io);
+	SocketioC = new SocketioController(io);
 
 	// MIDDLEWARE
+
 	app.use(cors());
 	app.use(bodyParser.json());
 	app.use(
@@ -49,27 +49,10 @@ const createRoutes = (app, io, bot) => {
 	app.get('/api/current_user', (req, res) => {
 		res.send(req.user);
 	});
-	app.post('/api/stripe', AuthC.isLogedIn, async (req, res) => {
-		const charge = await stripe.charges.create({
-			amount: 500,
-			currency: 'usd',
-			description: '5$ for 5 credits',
-			source: req.body.id,
-		});
-
-		req.user.credits += 5;
-		const user = await req.user.save(); // saves to DB
-
-		res.send(user);
-	});
+	app.post('/api/stripe', AuthC.isLogedIn, CreditsC.addCredits);
 
 	// PASSPORT ROUTES
-	app.get(
-		'/auth/google',
-		passport.authenticate('google', {
-			scope: ['profile', 'email'],
-		})
-	);
+	app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 	app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
 		res.redirect('/surveys');
 	});
@@ -86,12 +69,11 @@ const createRoutes = (app, io, bot) => {
 		res.send('Thanks for voting!');
 	});
 
-	// TELEGRAM LOGIC
-	// app.post('/telegram', TelegramC.deeplink, TelegramC.handleReq, TelegramC.isLoggedIn, TelegramC.start)
-	app.post('/telegram', TelegramC.testing);
+	// TELEGRAM WEBHOOK
+	app.post('/telegram', TelegramC.handleWebhook);
 
 	app.use(bot.webhookCallback('/telegram'));
-	bot.telegram.setWebhook('https://21742e16e9a8.ngrok.io/telegram');
+	bot.telegram.setWebhook('https://82206fbd3285.ngrok.io/telegram');
 };
 
 module.exports = createRoutes;

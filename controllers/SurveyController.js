@@ -5,15 +5,8 @@ const Mailer = require('../services/Mailer');
 const surveyTemplate = require('../services/emailTemplates/suveyTemplate');
 
 class SurveyController {
-	constructor(io, bot) {
-		this.io = io;
-		this.bot = bot;
-	}
-
 	getSurvey = async (req, res, next) => {
-		const surveys = await Survey.find({ _user: req.user.id })
-			.populate('_user')
-			.select('-recipients');
+		const surveys = await Survey.find({ _user: req.user.id }).populate('_user').select('-recipients');
 
 		console.log(surveys);
 		res.send(surveys);

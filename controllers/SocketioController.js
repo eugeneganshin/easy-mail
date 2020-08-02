@@ -6,13 +6,10 @@ class SocketioController {
 	/**
 	 * Creates an instance of SocketioController.
 	 *
-	 *
-	 * @param {object} bot telegraf API
 	 * @param {object} io  socketIo API
 	 */
 
-	constructor(bot, io) {
-		this.bot = bot;
+	constructor(io) {
 		this.io = io;
 	}
 
