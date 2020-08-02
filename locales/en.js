@@ -20,6 +20,7 @@ const locales = () => {
         new_survey: {
             message: `I will help you with creating new surveys. Please press the button to start.`,
             additional_message: 'You will be able to start again if the survey is wrong.',
+            success_message: `Success! You have sent the survey!`,
             buton: {
                 reply_markup: {
                     inline_keyboard: [
