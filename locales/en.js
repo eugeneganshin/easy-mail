@@ -19,6 +19,20 @@ const locales = () => {
 		},
 		surveys: {
 			test: 'ENTER SURVEYS SCENE',
+			buttons: {
+				all: {
+					text: 'All surveys',
+					cb: 'all',
+				},
+				last: {
+					text: 'Last survey',
+					cb: 'last',
+				},
+				last10: {
+					text: 'Last 10 surveys',
+					cb: 'last10',
+				},
+			},
 		},
 		new_survey: {
 			message: `I will help you with creating new surveys. Please press the button to start.`,

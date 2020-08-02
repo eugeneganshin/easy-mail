@@ -9,13 +9,18 @@ exports.isLoggedin = async (ctx, next) => {
 
 	const user = await User.findOne({ telegramChatId: uid });
 	const newUser = await User.findOneAndUpdate({ telegramSecret: decoded }, { telegramChatId: uid });
-
+	console.log('Middleware global');
 	if (newUser) {
 		ctx.session['user'] = newUser;
 		return next(ctx);
 	} else if (user) {
 		return next(ctx);
 	} else {
-		ctx.reply(`i Don't Know You, visit site and comeback!`);
+		// TODO: test button
+		ctx.reply(`I don't know you, visit site and comeback!`, {
+			reply_markup: {
+				inline_keyboard: [[{ text: 'easymail', url: 'https://easymail.com' }]],
+			},
+		});
 	}
 };

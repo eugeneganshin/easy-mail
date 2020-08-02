@@ -14,21 +14,3 @@ exports.mainKeyboard = Markup.keyboard([
 ])
 	.resize()
 	.extra();
-
-// INLINE KEYBOARD
-// exports.mainKeyboard = Extra.HTML().markup((m) =>
-//     m.inlineKeyboard(
-//         [
-//             [
-//                 m.callbackButton('INFO', 'INFO'),
-//                 m.callbackButton('HELP', 'HELP')
-//             ],
-//             [
-//                 m.callbackButton('SHOW MY SURVEYS', 'SURVEYS'),
-//                 m.callbackButton('CREATE NEW SURVEY', 'NEW_SURVEY')
-//             ],
-//             [
-//                 { text: 'VISIT WEBSITE', callback_data: 'URL', url: 'https://easymail.com' }
-//             ]
-//         ]
-//     ))
