@@ -70,10 +70,11 @@ const createRoutes = (app, io, bot) => {
 	});
 
 	// TELEGRAM WEBHOOK
-	app.post('/telegram', TelegramC.handleWebhook);
+	const cb = `/${keys.TELEGRAM_TOKEN.split(':')[1]}`;
 
-	app.use(bot.webhookCallback('/telegram'));
-	bot.telegram.setWebhook('https://e09116128a15.ngrok.io/telegram');
+	app.post(cb, TelegramC.handleWebhook);
+	app.use(bot.webhookCallback(cb));
+	bot.telegram.setWebhook(`https://e09116128a15.ngrok.io${cb}`);
 };
 
 module.exports = createRoutes;

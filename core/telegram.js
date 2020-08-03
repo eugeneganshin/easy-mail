@@ -9,14 +9,13 @@ const {
 	surveysScene,
 	visitWebsiteScene,
 } = require('../controllers/telegram');
+
 const { verifyNewUser } = require('../middleware/telegram');
 const keys = require('../config/keys');
 const locales = require('../locales/en');
-
 const asyncWrapper = require('../util/errorHandler');
 const { mainKeyboard } = require('../util/keyboard');
 const { shared, keyboards, other } = locales();
-
 const { leave } = Stage;
 
 const stage = new Stage([
@@ -26,6 +25,7 @@ const stage = new Stage([
 	newSurveyScene,
 	visitWebsiteScene,
 ]);
+
 stage.command('cancel', leave());
 
 const bot = new Telegraf(keys.TELEGRAM_TOKEN);

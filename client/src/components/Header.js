@@ -37,7 +37,6 @@ class Header extends Component {
 
 	telegramLink() {
 		if (this.props.url) {
-			console.log(this.props.url, 'TELEGRAMURL');
 			return (
 				<li key="1">
 					<div>

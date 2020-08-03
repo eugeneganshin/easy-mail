@@ -1,7 +1,5 @@
 const base64url = require('base64url');
 
-const keys = require('../config/keys');
-
 class SocketioController {
 	/**
 	 * Creates an instance of SocketioController.
