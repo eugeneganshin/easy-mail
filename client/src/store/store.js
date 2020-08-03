@@ -10,7 +10,7 @@ import socketReducer from './middleware/socket';
 import modalReducer from './reducers/modals';
 import logger from './middleware/logger';
 
-let socket = io.connect();
+let socket = io();
 
 let socketIoMiddleware = createSocketIoMiddleware(socket, 'server/');
 
