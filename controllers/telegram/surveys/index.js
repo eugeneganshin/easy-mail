@@ -1,7 +1,7 @@
 const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
 
-const { getAll, getLast, getLastTen, checkUser } = require('./actions');
+const { getAll, getLastOne, getLastTen, checkUser } = require('./actions');
 
 const { backKeyboard, mainKeyboard } = require('../../../util/keyboard');
 const { surveyButtons } = require('./helpers');
@@ -22,18 +22,10 @@ surveys.leave(async (ctx) => {
 });
 
 surveys.action('saveme', leave());
-surveys.action(scenes.surveys.buttons.all.cb, (ctx) => {
-	ctx.answerCbQuery();
-	ctx.reply('LOL');
-});
-surveys.action(scenes.surveys.buttons.last.cb, (ctx) => {
-	ctx.answerCbQuery();
-	ctx.reply('LOL');
-});
-surveys.action(scenes.surveys.buttons.last10.cb, (ctx) => {
-	ctx.answerCbQuery();
-	ctx.reply('LOL');
-});
+surveys.action(scenes.surveys.buttons.all.cb, getAll);
+surveys.action(scenes.surveys.buttons.last.cb, getLastOne);
+surveys.action(scenes.surveys.buttons.last10.cb, getLastTen);
+
 surveys.hears(keyboards.back_keyboard.back, leave());
 
 module.exports = surveys;
