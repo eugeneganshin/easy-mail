@@ -72,21 +72,21 @@ exports.getTitleCommand = asyncWrapper(async (ctx) => {
 
 exports.getSubjectAction = asyncWrapper(async (ctx) => {
 	if (ctx.message) ctx.wizard.state['title'] = ctx.message.text;
-	ctx.reply(scenes.new_survey.subject);
+	await ctx.reply(scenes.new_survey.subject);
 
 	return ctx.wizard.next();
 });
 
 exports.getBodyAction = asyncWrapper(async (ctx) => {
 	if (ctx.message) ctx.wizard.state['subject'] = ctx.message.text;
-	ctx.reply(scenes.new_survey.body);
+	await ctx.reply(scenes.new_survey.body);
 
 	return ctx.wizard.next();
 });
 
 exports.getRecipientsAction = asyncWrapper(async (ctx) => {
 	if (ctx.message) ctx.wizard.state['body'] = ctx.message.text;
-	ctx.reply(scenes.new_survey.recipients);
+	await ctx.reply(scenes.new_survey.recipients);
 
 	return ctx.wizard.next();
 });
@@ -97,19 +97,20 @@ exports.showResultAction = asyncWrapper(async (ctx) => {
 		recipients = ctx.message.text;
 		ctx.wizard.state['recipients'] = recipients;
 	}
+
 	const { title, subject, body } = ctx.wizard.state;
 
 	// If invalid emails, start current step again.
 	const invalidEmails = await validateEmails(recipients);
 	if (invalidEmails) {
-		ctx.replyWithMarkdownV2(invalidEmails);
-		ctx.wizard.back();
+		await ctx.replyWithMarkdownV2(invalidEmails);
+		await ctx.wizard.back();
 		return ctx.wizard.steps[ctx.wizard.cursor](ctx);
 	}
 
-	const resultMessage = `TITLE:\n${title}\n\nSUBJECT:\n${subject}\n\nBODY:\n${body}\n\nRECIPIENTS:\n${recipients}\n`;
-	ctx.reply(resultMessage);
-	ctx.reply(scenes.new_survey.choice, scenes.new_survey.resultButtons);
+	const resultMessage = `*TITLE:*\n${title}\n\n*SUBJECT:*\n${subject}\n\n*BODY:*\n${body}\n\n*RECIPIENTS:*\n${recipients}\n`;
+	await ctx.reply(scenes.new_survey.choice, scenes.new_survey.resultButtons);
+	await ctx.replyWithMarkdownV2(resultMessage);
 
 	return ctx.wizard.next();
 });

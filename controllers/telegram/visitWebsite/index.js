@@ -19,8 +19,7 @@ visitWebsite.leave(async (ctx) => {
 });
 
 // command,hears,action
-visitWebsite.command('back', leave());
+visitWebsite.command('saveme', leave());
 visitWebsite.hears(keyboards.back_keyboard.back, leave());
-visitWebsite.action('saveme', leave());
 
 module.exports = visitWebsite;

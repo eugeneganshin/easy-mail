@@ -21,7 +21,7 @@ surveys.leave(async (ctx) => {
 	await ctx.reply(shared.what_next, mainKeyboard);
 });
 
-surveys.action('saveme', leave());
+surveys.command('saveme', leave());
 surveys.action(scenes.surveys.buttons.all.cb, getAll);
 surveys.action(scenes.surveys.buttons.last.cb, getLastOne);
 surveys.action(scenes.surveys.buttons.last10.cb, getLastTen);

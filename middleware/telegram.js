@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const base64url = require('base64url');
 const User = mongoose.model('Users');
 
+const locales = require('../locales/en');
+const { scenes, shared } = locales();
+
 exports.verifyNewUser = async (ctx, next) => {
 	const uid = ctx.from.id;
 	const payload = ctx.startPayload;
@@ -12,15 +15,13 @@ exports.verifyNewUser = async (ctx, next) => {
 
 	if (newUser) {
 		ctx.session['user'] = newUser;
+		await ctx.reply(shared.bot_description);
+		await ctx.reply(scenes.start.new_account);
 		return next(ctx);
 	} else if (user) {
 		return next(ctx);
 	} else {
-		// TODO: test button
-		ctx.reply(`I don't know you, visit site and comeback!`, {
-			reply_markup: {
-				inline_keyboard: [[{ text: 'easymail', url: 'https://easymail.com' }]],
-			},
-		});
+		await ctx.reply(shared.bot_description);
+		await ctx.reply(scenes.start.unknown_user_message, scenes.start.button);
 	}
 };

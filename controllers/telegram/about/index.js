@@ -18,8 +18,7 @@ about.leave(async (ctx) => {
 });
 
 // command,hears,action
-about.command('back', leave());
 about.hears(keyboards.back_keyboard.back, leave());
-about.action('saveme', leave());
+about.command('saveme', leave());
 
 module.exports = about;

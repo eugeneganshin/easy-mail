@@ -1,16 +1,20 @@
 const locales = () => {
 	const scenes = {
 		start: {
-			welcome_back: 'Glad to see you back!',
+			unknown_user_message: `I don't know you, visit site and comeback!`,
+			button: {
+				reply_markup: {
+					inline_keyboard: [[{ text: 'easymail', url: 'https://easymail.com' }]],
+				},
+			},
 			new_account:
 				'Account has been created successfully! Before start doing stuff with me, please read a short instruction about who I am and how I can help you 😊',
-			bot_description:
-				"<b>🔻 I'm currently in open beta test and under heavy development. Therefore, errors may occur. Do not hesitate to contact the Creator from under ✍️ Contact section\n\n</b>🔻 My name is EasyMail and I will help you send email.",
-			lets_go: "Let's go!",
 		},
 		about: {
 			main: 'Hey! Thanks for activating me!\n',
 			enter: 'I am a small SPA application that sends email via SendGrid.',
+			bot_description:
+				"<b>🔻 I'm currently in open beta test and under heavy development. Therefore, errors may occur. Do not hesitate to contact the Creator from under ✍️ Contact section\n\n</b>🔻 My name is EasyMail and I will help you send email.",
 		},
 		contact: {
 			write_to_the_creator:
@@ -19,6 +23,7 @@ const locales = () => {
 		},
 		surveys: {
 			test: 'ENTER SURVEYS SCENE',
+			message: '',
 			buttons: {
 				all: {
 					text: 'All surveys',
@@ -83,6 +88,8 @@ const locales = () => {
 	const shared = {
 		what_next: '✋ Hey, what are you up to?',
 		something_went_wrong: '❌ Something went wrong. Try one more time..',
+		bot_description:
+			"🔻 I'm currently in open beta test and under heavy development. Therefore, errors may occur. Do not hesitate to contact the Creator from under ✍️ Contact section\n\n🔻 My name is EasyMail and I will help you send email.",
 		sticker: 'CAACAgEAAxkBAAIH1l8d70PLrLrGBDryPUZrFf1K0UyUAAKxCAACv4yQBGXO3y8nkM42GgQ',
 	};
 
