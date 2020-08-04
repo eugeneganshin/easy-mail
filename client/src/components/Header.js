@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import tgLogo from '../logos/telegram.png';
 import * as actionCreators from '../store/actions/index';
 import Payments from './Payments';
 

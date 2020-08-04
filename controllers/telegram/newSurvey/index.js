@@ -4,6 +4,7 @@ const WizardScene = require('telegraf/scenes/wizard');
 const locales = require('../../../locales/en');
 
 const { mainKeyboard } = require('../../../util/keyboard');
+const { checkUser, isEnoughCredits } = require('../../../middleware/telegram');
 const actions = require('./action');
 
 const { scenes, shared, keyboards } = locales();
@@ -11,7 +12,12 @@ const { scenes, shared, keyboards } = locales();
 const stepHandler = new Composer();
 const finalHandler = new Composer();
 
-stepHandler.action(scenes.new_survey.cbQueryNew, actions.getTitleAction);
+stepHandler.action(
+	scenes.new_survey.cbQueryNew,
+	checkUser,
+	isEnoughCredits,
+	actions.getTitleAction
+);
 stepHandler.command('create', actions.getTitleCommand);
 stepHandler.use(actions.infoOnInputAction);
 
