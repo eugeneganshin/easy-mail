@@ -8,7 +8,7 @@ const validateEmails = (emails) => {
 
 	// email.lenth fixes the issue with comma
 	if (invalidEmails.length) {
-		return `These emails are invalid: __${invalidEmails}__`;
+		return `These emails are invalid: ${invalidEmails}`;
 	}
 
 	return;

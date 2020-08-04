@@ -1,8 +1,8 @@
 const bodyParser = require('body-parser');
-const express = require('express');
 const passport = require('passport');
 const cors = require('cors');
 const cookieSession = require('cookie-session');
+const path = require('path');
 
 const keys = require('../config/keys');
 const stripe = require('stripe')(keys.STRIPE_SECRET_KEY);
@@ -35,16 +35,9 @@ const createRoutes = (app, io, bot) => {
 			keys: [keys.COOKIE_KEY],
 		})
 	);
+
 	app.use(passport.initialize());
 	app.use(passport.session());
-	if (process.env.NODE_ENV === 'production') {
-		app.use(express.static('client/build'));
-		const path = require('path');
-		app.get('*', (req, res) => {
-			res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-		});
-	}
-
 	// USER ROUTES
 	app.get('/api/current_user', (req, res) => {
 		res.send(req.user);
@@ -74,7 +67,7 @@ const createRoutes = (app, io, bot) => {
 
 	app.post(cb, TelegramC.handleWebhook);
 	app.use(bot.webhookCallback(cb));
-	bot.telegram.setWebhook(`https://e09116128a15.ngrok.io${cb}`);
+	bot.telegram.setWebhook(`https://ff21ba0c24a9.ngrok.io${cb}`);
 };
 
 module.exports = createRoutes;

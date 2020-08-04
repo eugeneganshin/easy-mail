@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Survey = mongoose.model('surveys');
-const User = mongoose.model('Users');
+const User = mongoose.model('user');
 
 const Mailer = require('../../../services/Mailer');
 const validateEmails = require('../../../util/validateEmails');
@@ -103,14 +103,14 @@ exports.showResultAction = asyncWrapper(async (ctx) => {
 	// If invalid emails, start current step again.
 	const invalidEmails = await validateEmails(recipients);
 	if (invalidEmails) {
-		await ctx.replyWithMarkdownV2(invalidEmails);
+		await ctx.reply(invalidEmails);
 		await ctx.wizard.back();
 		return ctx.wizard.steps[ctx.wizard.cursor](ctx);
 	}
 
-	const resultMessage = `*TITLE:*\n${title}\n\n*SUBJECT:*\n${subject}\n\n*BODY:*\n${body}\n\n*RECIPIENTS:*\n${recipients}\n`;
+	const resultMessage = `TITLE:\n${title}\nSUBJECT:\n${subject}\nBODY:\n${body}\nRECIPIENTS:\n${recipients}`;
 	await ctx.reply(scenes.new_survey.choice, scenes.new_survey.resultButtons);
-	await ctx.replyWithMarkdownV2(resultMessage);
+	await ctx.reply(resultMessage);
 
 	return ctx.wizard.next();
 });

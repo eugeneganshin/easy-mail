@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { startsWith } = require('lodash');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -9,4 +8,4 @@ const userSchema = new Schema({
 	telegramChatId: Number,
 });
 
-mongoose.model('Users', userSchema);
+mongoose.model('user', userSchema);

@@ -6,9 +6,10 @@ const surveyTemplate = require('../services/emailTemplates/suveyTemplate');
 
 class SurveyController {
 	getSurvey = async (req, res, next) => {
-		const surveys = await Survey.find({ _user: req.user.id }).populate('_user').select('-recipients');
+		const surveys = await Survey.find({ _user: req.user.id })
+			.populate('_user')
+			.select('-recipients');
 
-		console.log(surveys);
 		res.send(surveys);
 		next();
 	};

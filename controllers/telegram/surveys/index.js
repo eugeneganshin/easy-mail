@@ -13,8 +13,8 @@ const { leave } = Stage;
 const surveys = new Scene('surveyScene');
 
 surveys.enter(checkUser, async (ctx) => {
-	await ctx.reply('Which one?', surveyButtons);
-	await ctx.reply('Whatever', backKeyboard);
+	await ctx.reply(scenes.surveys.message, surveyButtons);
+	await ctx.replyWithSticker(scenes.surveys.sticker, backKeyboard);
 });
 
 surveys.leave(async (ctx) => {
@@ -29,11 +29,3 @@ surveys.action(scenes.surveys.buttons.last10.cb, getLastTen);
 surveys.hears(keyboards.back_keyboard.back, leave());
 
 module.exports = surveys;
-
-// if (ctx.session.user) {
-// 	const surveys = await Surveys.find({ _user: ctx.session.user._id });
-// 	console.log(surveys);
-// 	return await ctx.reply('user is session', backKeyboard);
-// }
-
-// const user = await User.findOne({ telegramChatId: ctx.message.from.id });

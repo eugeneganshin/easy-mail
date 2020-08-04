@@ -23,7 +23,8 @@ const locales = () => {
 		},
 		surveys: {
 			test: 'ENTER SURVEYS SCENE',
-			message: '',
+			message: 'Which one?',
+			sticker: 'CAACAgEAAxkBAAIH1l8d70PLrLrGBDryPUZrFf1K0UyUAAKxCAACv4yQBGXO3y8nkM42GgQ',
 			buttons: {
 				all: {
 					text: 'All surveys',

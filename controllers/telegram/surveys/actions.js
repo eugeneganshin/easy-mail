@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Surveys = mongoose.model('surveys');
-const User = mongoose.model('Users');
+const User = mongoose.model('user');
 
 const { surveyTemplate } = require('./helpers');
 const asyncWrapper = require('../../../util/errorHandler');
@@ -9,9 +9,11 @@ const locales = require('../../../locales/en');
 const { shared } = locales();
 
 exports.checkUser = async (ctx, next) => {
-	try {
-		if (ctx.session.user) next(ctx);
+	if (ctx.session.user) {
+		return next(ctx);
+	}
 
+	try {
 		const uid = ctx.from.id;
 		const user = await User.findOne({ telegramChatId: uid });
 		ctx.session['user'] = user;

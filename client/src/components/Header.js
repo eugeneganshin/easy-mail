@@ -51,12 +51,11 @@ class Header extends Component {
 	}
 
 	render() {
-		console.log(this.props);
 		return (
 			<nav>
 				<div className="nav-wrapper">
 					<Link to={this.props.authenticated ? '/surveys' : '/'} className="brand-logo left">
-						Logo
+						<i className="material-icons">email</i>
 					</Link>
 					<ul className="right">{this.renderContentHandler()}</ul>
 				</div>

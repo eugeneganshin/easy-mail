@@ -11,7 +11,6 @@ const { leave } = Stage;
 const contact = new Scene('contactScene');
 
 contact.enter(async (ctx) => {
-	console.log(ctx.from);
 	await ctx.reply(scenes.contact.write_to_the_creator, backKeyboard);
 });
 
